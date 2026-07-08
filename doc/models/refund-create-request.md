@@ -1,0 +1,43 @@
+
+# Refund Create Request
+
+Request body for creating a refund against a successful charge. Konbini and bank transfer charges cannot be refunded.
+
+*This model accepts additional fields of type Any.*
+
+## Structure
+
+`RefundCreateRequest`
+
+## Fields
+
+| Name | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `amount` | `int` | Required | Amount to refund in the smallest currency unit. Must be greater than 0 and not exceed the charged amount. Partial refunds are supported for most payment methods. |
+| `currency` | `str` | Required | ISO-4217 currency code. Must exactly match the currency of the original charge. |
+| `reason` | [`RefundReasonRequest`](../../doc/models/refund-reason-request.md) | Optional | The reason for the refund (merchant-settable values). `duplicate`: A duplicate charge was made. `fraud`: The charge is fraudulent. `customer_request`: The customer requested the refund. |
+| `message` | `str` | Optional | Optional free-text note about the reason for the refund. |
+| `metadata` | [`GenericMetadata`](../../doc/models/generic-metadata.md) | Optional | A free-form dictionary for custom metadata. |
+| `additional_properties` | `Dict[str, Any]` | Optional | - |
+
+## Example
+
+```python
+import jsonpickle
+
+from univapayclientsdk.models.generic_metadata import GenericMetadata
+from univapayclientsdk.models.refund_create_request import RefundCreateRequest
+from univapayclientsdk.models.refund_reason_request import RefundReasonRequest
+
+refund_create_request = RefundCreateRequest(
+    amount=1000,
+    currency='JPY',
+    reason=RefundReasonRequest.CUSTOMER_REQUEST,
+    message='Customer returned item',
+    metadata=GenericMetadata(),
+    additional_properties={
+        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+    }
+)
+```
+

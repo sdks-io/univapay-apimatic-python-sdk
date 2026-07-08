@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "univapay-apimatic-sdk"
+description = "Sample SDKs for Univapay by APIMatic"
+version = "0.0.1"
+readme = "README.md"
+keywords = []
+dependencies = ["apimatic-core~=0.2.0, >= 0.2.24", "apimatic-core-interfaces~=0.1.0, >= 0.1.8", "apimatic-requests-client-adapter~=0.1.0, >= 0.1.10", "python-dotenv>=0.21, <2.0"]
+classifiers = []
+requires-python = ">=3.7"
+[[project.authors]]
+name = "Muhammad Rafay"
+email = "muhammad.rafay@apimatic.io"
+
+[project.urls]
+Documentation = "https://univapay.com/"
+[project.optional-dependencies]
+testutils = ["pytest>=7.2.2", "pytest-django>=4.5.2, <5", "Django~=3.2.25 ; python_version < '3.13'", "Django~=5.1.3 ; python_version >= '3.13'", "Flask~=2.2.5", "fastapi~=0.95.2", "httpx~=0.24.1", "anyio~=3.7.1", "typing-extensions~=4.7.1", "Werkzeug>=2.2, <3.0"]
+[tool]
+[tool.setuptools]
+[tool.setuptools.packages]
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
