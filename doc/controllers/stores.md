@@ -3,12 +3,12 @@
 Store discovery and configuration endpoints for merchant contexts.
 
 ```python
-stores_api = client.stores
+stores_controller = client.stores
 ```
 
 ## Class Name
 
-`StoresApi`
+`StoresController`
 
 ## Methods
 
@@ -62,7 +62,7 @@ short_id = 'st_01hxy9p8zw4d'
 
 search = 'tokyo'
 
-result = stores_api.list_stores(
+result = stores_controller.list_stores(
     limit=limit,
     cursor=cursor,
     cursor_direction=cursor_direction,
@@ -145,7 +145,7 @@ This method returns an [`ApiResponse`](../../doc/api-response.md) instance. The 
 ```python
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = stores_api.get_store(id)
+result = stores_controller.get_store(id)
 
 if result.is_success():
     print(result.body)

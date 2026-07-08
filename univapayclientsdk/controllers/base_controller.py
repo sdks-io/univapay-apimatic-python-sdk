@@ -14,7 +14,7 @@ from univapayclientsdk.exceptions.api_exception import (
 )
 
 
-class BaseApi(object):
+class BaseController(object):
     """All controllers inherit from this base class.
 
     Attributes:
@@ -31,7 +31,7 @@ class BaseApi(object):
     @staticmethod
     def user_agent():
         """Return UserAgent value."""
-        return "Python-SDK/0.0.1 (OS: {os-info}, Engine: {engine}/{engine-version})"
+        return "Python-SDK/0.0.3 (OS: {os-info}, Engine: {engine}/{engine-version})"
 
     @staticmethod
     def user_agent_parameters():
@@ -52,7 +52,7 @@ class BaseApi(object):
         }
 
     def __init__(self, config):
-        """Initialize BaseApi object."""
+        """Initialize BaseController object."""
         self._config = config.get_http_client_configuration()
         self._http_call_back = self.config.http_callback
         self.api_call = ApiCall(config)

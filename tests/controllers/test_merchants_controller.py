@@ -11,11 +11,13 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.apis.api_test_base import ApiTestBase
+from tests.controllers.controller_test_base import (
+    ControllerTestBase,
+)
 from univapayclientsdk.api_helper import APIHelper
 
 
-class MerchantsApiTests(ApiTestBase):
+class MerchantsControllerTests(ControllerTestBase):
     """
     Endpoint tests for validating the API behavior.
 

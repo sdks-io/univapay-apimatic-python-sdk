@@ -3,12 +3,12 @@
 Endpoints to create and manage refunds for charges.
 
 ```python
-refunds_api = client.refunds
+refunds_controller = client.refunds
 ```
 
 ## Class Name
 
-`RefundsApi`
+`RefundsController`
 
 ## Methods
 
@@ -68,7 +68,7 @@ cursor_direction = CursorDirectionQuery.ASC
 
 metadata = 'order_id: 12345'
 
-result = refunds_api.list_refunds(
+result = refunds_controller.list_refunds(
     store_id,
     charge_id,
     limit=limit,
@@ -199,7 +199,7 @@ body = RefundCreateRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = refunds_api.create_refund(
+result = refunds_controller.create_refund(
     store_id,
     charge_id,
     body,
@@ -286,7 +286,7 @@ id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
 polling = True
 
-result = refunds_api.get_refund(
+result = refunds_controller.get_refund(
     store_id,
     charge_id,
     id,
@@ -379,7 +379,7 @@ body = RefundUpdateRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = refunds_api.update_refund(
+result = refunds_controller.update_refund(
     store_id,
     charge_id,
     id,

@@ -11,17 +11,19 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.apis.api_test_base import ApiTestBase
+from tests.controllers.controller_test_base import (
+    ControllerTestBase,
+)
 from univapayclientsdk.api_helper import APIHelper
-from univapayclientsdk.models.refund_create_request import (
-    RefundCreateRequest,
+from univapayclientsdk.models.cancel_create_request import (
+    CancelCreateRequest,
 )
-from univapayclientsdk.models.refund_update_request import (
-    RefundUpdateRequest,
+from univapayclientsdk.models.cancel_update_request import (
+    CancelUpdateRequest,
 )
 
 
-class RefundsApiTests(ApiTestBase):
+class CancelsControllerTests(ControllerTestBase):
     """
     Endpoint tests for validating the API behavior.
 
@@ -37,12 +39,12 @@ class RefundsApiTests(ApiTestBase):
         Initialize the shared test client and controller for all test methods.
         """
         super().setUpClass()
-        cls.controller = cls.client.refunds
+        cls.controller = cls.client.cancels
         cls.response_catcher = cls.controller.http_call_back
 
-    def test_list_refunds(self):
+    def test_list_cancels(self):
         """
-        Retrieves a list of all refunds for a specific charge.
+        Returns a paginated list of cancels for the specified charge.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"
@@ -50,16 +52,14 @@ class RefundsApiTests(ApiTestBase):
         limit = 10
         cursor = "3541d4fa-596d-428e-8a36-f274e1b3d505"
         cursor_direction = "desc"
-        metadata = "order_id: 12345"
 
         # Perform the API call through the SDK function
-        result = self.controller.list_refunds(
+        result = self.controller.list_cancels(
             store_id,
             charge_id,
             limit,
             cursor,
             cursor_direction,
-            metadata,
         )
         # Test response code
         assert self.response_catcher.response.status_code == 200
@@ -75,26 +75,21 @@ class RefundsApiTests(ApiTestBase):
         # Test whether the captured response is as we expected
         assert result is not None
         expected_body = APIHelper.json_deserialize(
-            "{\"items\":[{\"id\":\"b4d9fea9-c9b3-4e76-a25d-b61f7e4821b6\",\"store_id"
-            "\":\"76cf4a64-02bc-4cb3-9a28-74622e5928a1\",\"charge_id\":\"6efb4e5c-690"
-            "a-40f3-a4f1-0e19c5f84e98\",\"status\":\"successful\",\"amount\":1000,\"c"
-            "urrency\":\"JPY\",\"amount_formatted\":1000,\"reason\":\"customer_reques"
-            "t\",\"message\":\"Customer returned item\",\"error\":{},\"metadata\":{},"
-            "\"mode\":\"live\",\"created_on\":\"2026-04-09T07:35:50.000000Z\",\"updat"
-            "ed_on\":\"2026-04-09T07:36:00.000000Z\"},{\"id\":\"c5e0afb0-dac4-5f87-b3"
-            "6e-c72f8f5932c7\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28-74622e5928a1\","
-            "\"charge_id\":\"7fac5f6d-7a1b-51e4-b5f2-1f2ad6f95fa9\",\"status\":\"pend"
-            "ing\",\"amount\":2500,\"currency\":\"JPY\",\"amount_formatted\":2500,\"r"
-            "eason\":\"duplicate\",\"message\":\"Duplicate charge\",\"error\":{},\"me"
-            "tadata\":{\"order_id\":\"ORD-1002\"},\"mode\":\"live\",\"created_on\":\""
-            "2026-04-10T10:00:00.000000Z\",\"updated_on\":\"2026-04-10T10:00:05.00000"
-            "0Z\"},{\"id\":\"d6f1bac1-ebd5-6098-c47f-d83a906043d8\",\"store_id\":\"76"
-            "cf4a64-02bc-4cb3-9a28-74622e5928a1\",\"charge_id\":\"80bd6a7e-8b2c-62f5-"
-            "c6a3-2a3be7a06aba\",\"status\":\"successful\",\"amount\":500,\"currency"
-            "\":\"JPY\",\"amount_formatted\":500,\"reason\":\"fraud\",\"message\":\"F"
-            "raudulent transaction reversed\",\"error\":{},\"metadata\":{},\"mode\":"
-            "\"live\",\"created_on\":\"2026-04-11T14:22:08.000000Z\",\"updated_on\":"
-            "\"2026-04-11T14:22:20.000000Z\"}],\"has_more\":false,\"total_hits\":3}",
+            "{\"items\":[{\"id\":\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\"charge_id"
+            "\":\"6efb4e5c-690a-40f3-a4f1-0e19c5f84e98\",\"store_id\":\"76cf4a64-02bc"
+            "-4cb3-9a28-74622e5928a1\",\"status\":\"successful\",\"error\":{},\"metad"
+            "ata\":{\"order_id\":\"ORD-987\"},\"mode\":\"live\",\"created_on\":\"2026"
+            "-04-09T07:35:50.000000Z\",\"updated_on\":\"2026-04-09T07:36:00.000000Z\""
+            "},{\"id\":\"b2c3d4e5-f6a7-8901-bcde-f23456789012\",\"charge_id\":\"7fac5"
+            "f6d-7a1b-51e4-b5f2-1f2ad6f95fa9\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28"
+            "-74622e5928a1\",\"status\":\"successful\",\"error\":{},\"metadata\":{\"o"
+            "rder_id\":\"ORD-988\"},\"mode\":\"live\",\"created_on\":\"2026-04-10T10:"
+            "00:00.000000Z\",\"updated_on\":\"2026-04-10T10:00:12.000000Z\"},{\"id\":"
+            "\"c3d4e5f6-a7b8-9012-cdef-345678901234\",\"charge_id\":\"80bd6a7e-8b2c-6"
+            "2f5-c6a3-2a3be7a06aba\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28-74622e592"
+            "8a1\",\"status\":\"pending\",\"error\":{},\"metadata\":{},\"mode\":\"liv"
+            "e\",\"created_on\":\"2026-04-11T14:22:08.000000Z\",\"updated_on\":\"2026"
+            "-04-11T14:22:08.000000Z\"}],\"has_more\":false}",
         )
         received_body = APIHelper.json_deserialize(
             self.response_catcher.response.text,
@@ -104,27 +99,27 @@ class RefundsApiTests(ApiTestBase):
             received_body,
         )
 
-    def test_create_refund(self):
+    def test_create_cancel(self):
         """
-        Creates a refund for a successful charge. The charge must have status
-        `successful`. Konbini and bank transfer charges cannot be refunded. The refund
-        is processed asynchronously — the initial status will be `pending`.
+        Creates a new cancellation request for a charge. The charge must be in a
+        cancellable state. Bank transfer and konbini charges that have already been
+        paid cannot be cancelled.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"
         charge_id = "6efb4e5c-690a-40f3-a4f1-0e19c5f84e98"
-        body = APIHelper.json_deserialize(
-            "{\"amount\":1000,\"currency\":\"JPY\",\"reason\":\"customer_request\"}",
-            RefundCreateRequest.from_dictionary,
-        )
         idempotency_key = "f64be872-353d-4c3c-84cb-3dc617fe89f7"
+        body = APIHelper.json_deserialize(
+            "{\"metadata\":{\"order_id\":\"ORD-987\"}}",
+            CancelCreateRequest.from_dictionary,
+        )
 
         # Perform the API call through the SDK function
-        result = self.controller.create_refund(
+        result = self.controller.create_cancel(
             store_id,
             charge_id,
-            body,
             idempotency_key,
+            body,
         )
         # Test response code
         assert self.response_catcher.response.status_code == 201
@@ -140,13 +135,11 @@ class RefundsApiTests(ApiTestBase):
         # Test whether the captured response is as we expected
         assert result is not None
         expected_body = APIHelper.json_deserialize(
-            "{\"id\":\"b4d9fea9-c9b3-4e76-a25d-b61f7e4821b6\",\"store_id\":\"76cf4a64"
-            "-02bc-4cb3-9a28-74622e5928a1\",\"charge_id\":\"6efb4e5c-690a-40f3-a4f1-0"
-            "e19c5f84e98\",\"status\":\"pending\",\"amount\":1000,\"currency\":\"JPY"
-            "\",\"amount_formatted\":1000,\"reason\":\"customer_request\",\"message\""
-            ":\"Customer returned item\",\"error\":null,\"metadata\":{},\"mode\":\"li"
-            "ve\",\"created_on\":\"2026-04-09T07:35:50.000000Z\",\"updated_on\":\"202"
-            "6-04-09T07:35:50.000000Z\"}",
+            "{\"id\":\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\"charge_id\":\"6efb4e5"
+            "c-690a-40f3-a4f1-0e19c5f84e98\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28-7"
+            "4622e5928a1\",\"status\":\"pending\",\"error\":null,\"metadata\":{},\"mo"
+            "de\":\"live\",\"created_on\":\"2026-04-09T07:35:50.000000Z\",\"updated_o"
+            "n\":\"2026-04-09T07:35:50.000000Z\"}",
         )
         received_body = APIHelper.json_deserialize(
             self.response_catcher.response.text,
@@ -156,20 +149,20 @@ class RefundsApiTests(ApiTestBase):
             received_body,
         )
 
-    def test_get_refund(self):
+    def test_get_cancel(self):
         """
-        Retrieves the details of a specific refund. Supports long polling — set
-        `polling=true` to wait until the refund status changes from `pending` to a
-        terminal state (`successful`, `failed`, or `error`).
+        Retrieves a specific cancel by ID. Supports long-polling by appending
+        `?polling=true` to wait for a status change (up to the server timeout).
+        Requires a secret-bearing token.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"
         charge_id = "6efb4e5c-690a-40f3-a4f1-0e19c5f84e98"
         id = "c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4"
-        polling = True
+        polling = False
 
         # Perform the API call through the SDK function
-        result = self.controller.get_refund(
+        result = self.controller.get_cancel(
             store_id,
             charge_id,
             id,
@@ -189,13 +182,11 @@ class RefundsApiTests(ApiTestBase):
         # Test whether the captured response is as we expected
         assert result is not None
         expected_body = APIHelper.json_deserialize(
-            "{\"id\":\"b4d9fea9-c9b3-4e76-a25d-b61f7e4821b6\",\"store_id\":\"76cf4a64"
-            "-02bc-4cb3-9a28-74622e5928a1\",\"charge_id\":\"6efb4e5c-690a-40f3-a4f1-0"
-            "e19c5f84e98\",\"status\":\"successful\",\"amount\":1000,\"currency\":\"J"
-            "PY\",\"amount_formatted\":1000,\"reason\":\"customer_request\",\"message"
-            "\":\"Customer returned item\",\"error\":null,\"metadata\":{},\"mode\":\""
-            "live\",\"created_on\":\"2026-04-09T07:35:50.000000Z\",\"updated_on\":\"2"
-            "026-04-09T07:36:00.000000Z\"}",
+            "{\"id\":\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\"charge_id\":\"6efb4e5"
+            "c-690a-40f3-a4f1-0e19c5f84e98\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28-7"
+            "4622e5928a1\",\"status\":\"successful\",\"error\":null,\"metadata\":{},"
+            "\"mode\":\"live\",\"created_on\":\"2026-04-09T07:35:50.000000Z\",\"updat"
+            "ed_on\":\"2026-04-09T07:36:00.000000Z\"}",
         )
         received_body = APIHelper.json_deserialize(
             self.response_catcher.response.text,
@@ -205,23 +196,22 @@ class RefundsApiTests(ApiTestBase):
             received_body,
         )
 
-    def test_update_refund(self):
+    def test_update_cancel(self):
         """
-        Updates metadata, message, or reason on an existing refund.
+        Updates metadata on an existing cancel. Requires a secret-bearing token.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"
         charge_id = "6efb4e5c-690a-40f3-a4f1-0e19c5f84e98"
         id = "c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4"
         body = APIHelper.json_deserialize(
-            "{\"message\":\"Updated reason note\",\"metadata\":{\"order_id\":\"12345"
-            "\"}}",
-            RefundUpdateRequest.from_dictionary,
+            "{\"metadata\":{\"order_id\":\"12345\"}}",
+            CancelUpdateRequest.from_dictionary,
         )
         idempotency_key = "f64be872-353d-4c3c-84cb-3dc617fe89f7"
 
         # Perform the API call through the SDK function
-        result = self.controller.update_refund(
+        result = self.controller.update_cancel(
             store_id,
             charge_id,
             id,
@@ -242,13 +232,11 @@ class RefundsApiTests(ApiTestBase):
         # Test whether the captured response is as we expected
         assert result is not None
         expected_body = APIHelper.json_deserialize(
-            "{\"id\":\"b4d9fea9-c9b3-4e76-a25d-b61f7e4821b6\",\"store_id\":\"76cf4a64"
-            "-02bc-4cb3-9a28-74622e5928a1\",\"charge_id\":\"6efb4e5c-690a-40f3-a4f1-0"
-            "e19c5f84e98\",\"status\":\"successful\",\"amount\":1000,\"currency\":\"J"
-            "PY\",\"amount_formatted\":1000,\"reason\":\"customer_request\",\"message"
-            "\":\"Updated reason note\",\"error\":null,\"metadata\":{\"order_id\":\"1"
-            "2345\"},\"mode\":\"live\",\"created_on\":\"2026-04-09T07:35:50.000000Z\""
-            ",\"updated_on\":\"2026-04-09T08:00:00.000000Z\"}",
+            "{\"id\":\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\"charge_id\":\"6efb4e5"
+            "c-690a-40f3-a4f1-0e19c5f84e98\",\"store_id\":\"76cf4a64-02bc-4cb3-9a28-7"
+            "4622e5928a1\",\"status\":\"successful\",\"error\":null,\"metadata\":{\"o"
+            "rder_id\":\"12345\"},\"mode\":\"live\",\"created_on\":\"2026-04-09T07:35"
+            ":50.000000Z\",\"updated_on\":\"2026-04-09T08:00:00.000000Z\"}",
         )
         received_body = APIHelper.json_deserialize(
             self.response_catcher.response.text,

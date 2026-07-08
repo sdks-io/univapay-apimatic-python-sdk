@@ -13,11 +13,11 @@ from apimatic_core.response_handler import ResponseHandler
 from apimatic_core.types.parameter import Parameter
 
 from univapayclientsdk.api_helper import APIHelper
-from univapayclientsdk.apis.base_api import (
-    BaseApi,
-)
 from univapayclientsdk.configuration import (
     Server,
+)
+from univapayclientsdk.controllers.base_controller import (
+    BaseController,
 )
 from univapayclientsdk.exceptions.api_error_exception import (
     ApiErrorException,
@@ -33,12 +33,12 @@ from univapayclientsdk.models.merchant import (
 )
 
 
-class MerchantsApi(BaseApi):
+class MerchantsController(BaseController):
     """A Controller to access Endpoints in the univapayclientsdk API."""
 
     def __init__(self, config):
-        """Initialize MerchantsApi object."""
-        super(MerchantsApi, self).__init__(config)
+        """Initialize MerchantsController object."""
+        super(MerchantsController, self).__init__(config)
 
     def get_current_merchant(self):
         """Perform a GET request to /me.

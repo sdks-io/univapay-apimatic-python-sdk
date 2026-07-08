@@ -17,7 +17,7 @@ from univapayclientsdk.univapay_client_sdk_client import (
 )
 
 
-class ApiTestBase(unittest.TestCase):
+class ControllerTestBase(unittest.TestCase):
     """
     All test classes inherit from this base class. It abstracts out
     common functionality and configuration variables set up.
@@ -31,7 +31,7 @@ class ApiTestBase(unittest.TestCase):
         """Class method called once before running tests in a test class."""
         cls.request_timeout = 30
         cls.assert_precision = 0.01
-        cls.config = ApiTestBase.create_configuration()
+        cls.config = ControllerTestBase.create_configuration()
         cls.client = UnivapayClientSdkClient(config=cls.config)
 
     @staticmethod

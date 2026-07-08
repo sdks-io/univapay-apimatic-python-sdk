@@ -13,11 +13,11 @@ from apimatic_core.response_handler import ResponseHandler
 from apimatic_core.types.parameter import Parameter
 
 from univapayclientsdk.api_helper import APIHelper
-from univapayclientsdk.apis.base_api import (
-    BaseApi,
-)
 from univapayclientsdk.configuration import (
     Server,
+)
+from univapayclientsdk.controllers.base_controller import (
+    BaseController,
 )
 from univapayclientsdk.exceptions.api_error_exception import (
     ApiErrorException,
@@ -39,12 +39,12 @@ from univapayclientsdk.models.webhook_list import (
 )
 
 
-class WebhooksApi(BaseApi):
+class WebhooksController(BaseController):
     """A Controller to access Endpoints in the univapayclientsdk API."""
 
     def __init__(self, config):
-        """Initialize WebhooksApi object."""
-        super(WebhooksApi, self).__init__(config)
+        """Initialize WebhooksController object."""
+        super(WebhooksController, self).__init__(config)
 
     def list_webhooks(self,
                       store_id,

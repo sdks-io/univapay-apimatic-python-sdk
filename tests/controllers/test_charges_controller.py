@@ -11,7 +11,9 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.apis.api_test_base import ApiTestBase
+from tests.controllers.controller_test_base import (
+    ControllerTestBase,
+)
 from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.charge_capture_request import (
     ChargeCaptureRequest,
@@ -30,7 +32,7 @@ from univapayclientsdk.models.customs_declaration_patch_request import (
 )
 
 
-class ChargesApiTests(ApiTestBase):
+class ChargesControllerTests(ControllerTestBase):
     """
     Endpoint tests for validating the API behavior.
 

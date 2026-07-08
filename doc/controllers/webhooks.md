@@ -3,12 +3,12 @@
 Endpoints to create and manage store-level webhook subscriptions and view delivery history.
 
 ```python
-webhooks_api = client.webhooks
+webhooks_controller = client.webhooks
 ```
 
 ## Class Name
 
-`WebhooksApi`
+`WebhooksController`
 
 ## Methods
 
@@ -67,7 +67,7 @@ cursor_direction = CursorDirectionQuery.ASC
 
 active = True
 
-result = webhooks_api.list_webhooks(
+result = webhooks_controller.list_webhooks(
     store_id,
     limit=limit,
     cursor=cursor,
@@ -187,7 +187,7 @@ body = WebhookCreateRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = webhooks_api.create_webhook(
+result = webhooks_controller.create_webhook(
     store_id,
     body,
     idempotency_key=idempotency_key
@@ -261,7 +261,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = webhooks_api.get_webhook(
+result = webhooks_controller.get_webhook(
     store_id,
     id
 )
@@ -339,7 +339,7 @@ body = WebhookUpdateRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = webhooks_api.update_webhook(
+result = webhooks_controller.update_webhook(
     store_id,
     id,
     body,
@@ -411,7 +411,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = webhooks_api.delete_webhook(
+result = webhooks_controller.delete_webhook(
     store_id,
     id
 )
@@ -477,7 +477,7 @@ cursor = '3541d4fa-596d-428e-8a36-f274e1b3d505'
 
 cursor_direction = CursorDirectionQuery.ASC
 
-result = webhooks_api.list_webhook_events(
+result = webhooks_controller.list_webhook_events(
     store_id,
     id,
     limit=limit,
@@ -579,7 +579,7 @@ event_id = 'e1f2a3b4-c5d6-7890-efab-123456789cde'
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = webhooks_api.redeliver_webhook_event(
+result = webhooks_controller.redeliver_webhook_event(
     store_id,
     id,
     event_id,

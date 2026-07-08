@@ -12,36 +12,36 @@ from apimatic_core.decorators.lazy_property import (
     LazyProperty,
 )
 
-from univapayclientsdk.apis.base_api import (
-    BaseApi,
-)
-from univapayclientsdk.apis.cancels_api import (
-    CancelsApi,
-)
-from univapayclientsdk.apis.charges_api import (
-    ChargesApi,
-)
-from univapayclientsdk.apis.merchants_api import (
-    MerchantsApi,
-)
-from univapayclientsdk.apis.refunds_api import (
-    RefundsApi,
-)
-from univapayclientsdk.apis.stores_api import (
-    StoresApi,
-)
-from univapayclientsdk.apis.subscriptions_api import (
-    SubscriptionsApi,
-)
-from univapayclientsdk.apis.transaction_tokens_api import (
-    TransactionTokensApi,
-)
-from univapayclientsdk.apis.webhooks_api import (
-    WebhooksApi,
-)
 from univapayclientsdk.configuration import (
     Configuration,
     Environment,
+)
+from univapayclientsdk.controllers.base_controller import (
+    BaseController,
+)
+from univapayclientsdk.controllers.cancels_controller import (
+    CancelsController,
+)
+from univapayclientsdk.controllers.charges_controller import (
+    ChargesController,
+)
+from univapayclientsdk.controllers.merchants_controller import (
+    MerchantsController,
+)
+from univapayclientsdk.controllers.refunds_controller import (
+    RefundsController,
+)
+from univapayclientsdk.controllers.stores_controller import (
+    StoresController,
+)
+from univapayclientsdk.controllers.subscriptions_controller import (
+    SubscriptionsController,
+)
+from univapayclientsdk.controllers.transaction_tokens_controller import (
+    TransactionTokensController,
+)
+from univapayclientsdk.controllers.webhooks_controller import (
+    WebhooksController,
 )
 from univapayclientsdk.http.auth.oauth_2 import (
     Oauth2,
@@ -53,43 +53,43 @@ class UnivapayClientSdkClient(object):
 
     @LazyProperty
     def charges(self):
-        """Provide access to the ChargesApi endpoints."""
-        return ChargesApi(self.global_configuration)
+        """Provide access to the ChargesController endpoints."""
+        return ChargesController(self.global_configuration)
 
     @LazyProperty
     def transaction_tokens(self):
-        """Provide access to the TransactionTokensApi endpoints."""
-        return TransactionTokensApi(self.global_configuration)
+        """Provide access to the TransactionTokensController endpoints."""
+        return TransactionTokensController(self.global_configuration)
 
     @LazyProperty
     def refunds(self):
-        """Provide access to the RefundsApi endpoints."""
-        return RefundsApi(self.global_configuration)
+        """Provide access to the RefundsController endpoints."""
+        return RefundsController(self.global_configuration)
 
     @LazyProperty
     def subscriptions(self):
-        """Provide access to the SubscriptionsApi endpoints."""
-        return SubscriptionsApi(self.global_configuration)
+        """Provide access to the SubscriptionsController endpoints."""
+        return SubscriptionsController(self.global_configuration)
 
     @LazyProperty
     def cancels(self):
-        """Provide access to the CancelsApi endpoints."""
-        return CancelsApi(self.global_configuration)
+        """Provide access to the CancelsController endpoints."""
+        return CancelsController(self.global_configuration)
 
     @LazyProperty
     def merchants(self):
-        """Provide access to the MerchantsApi endpoints."""
-        return MerchantsApi(self.global_configuration)
+        """Provide access to the MerchantsController endpoints."""
+        return MerchantsController(self.global_configuration)
 
     @LazyProperty
     def stores(self):
-        """Provide access to the StoresApi endpoints."""
-        return StoresApi(self.global_configuration)
+        """Provide access to the StoresController endpoints."""
+        return StoresController(self.global_configuration)
 
     @LazyProperty
     def webhooks(self):
-        """Provide access to the WebhooksApi endpoints."""
-        return WebhooksApi(self.global_configuration)
+        """Provide access to the WebhooksController endpoints."""
+        return WebhooksController(self.global_configuration)
 
     def __init__(self, http_client_instance=None,
                  override_http_client_configuration=False, http_call_back=None,
@@ -111,10 +111,10 @@ class UnivapayClientSdkClient(object):
             bearer_auth_credentials=bearer_auth_credentials)
 
         self.global_configuration = GlobalConfiguration(self.config)\
-            .global_errors(BaseApi.global_errors())\
+            .global_errors(BaseController.global_errors())\
             .base_uri_executor(self.config.get_base_uri)\
-            .user_agent(BaseApi.user_agent(),
-                BaseApi.user_agent_parameters())
+            .user_agent(BaseController.user_agent(),
+                BaseController.user_agent_parameters())
 
         self.auth_managers = {
             "JWT_TOKEN": Oauth2(self.config.bearer_auth_credentials),
