@@ -13,11 +13,11 @@ from apimatic_core.response_handler import ResponseHandler
 from apimatic_core.types.parameter import Parameter
 
 from univapayclientsdk.api_helper import APIHelper
+from univapayclientsdk.apis.base_api import (
+    BaseApi,
+)
 from univapayclientsdk.configuration import (
     Server,
-)
-from univapayclientsdk.controllers.base_controller import (
-    BaseController,
 )
 from univapayclientsdk.exceptions.api_error_exception import (
     ApiErrorException,
@@ -28,49 +28,50 @@ from univapayclientsdk.exceptions.api_exception import (
 from univapayclientsdk.http.http_method_enum import (
     HttpMethodEnum,
 )
+from univapayclientsdk.models.bank_transfer_ledger_list import (
+    BankTransferLedgerList,
+)
 from univapayclientsdk.models.charge import (
     Charge,
 )
 from univapayclientsdk.models.charge_list import (
     ChargeList,
 )
-from univapayclientsdk.models.subscription import (
-    Subscription,
+from univapayclientsdk.models.customs_declaration_webhook_data import (
+    CustomsDeclarationWebhookData,
 )
-from univapayclientsdk.models.subscription_list import (
-    SubscriptionList,
+from univapayclientsdk.models.issuer_token import (
+    IssuerToken,
 )
-from univapayclientsdk.models.subscription_payment import (
-    SubscriptionPayment,
-)
-from univapayclientsdk.models.subscription_payment_list import (
-    SubscriptionPaymentList,
+from univapayclientsdk.models.three_ds_issuer_token import (
+    ThreeDsIssuerToken,
 )
 
 
-class SubscriptionsController(BaseController):
+class ChargesApi(BaseApi):
     """A Controller to access Endpoints in the univapayclientsdk API."""
 
     def __init__(self, config):
-        """Initialize SubscriptionsController object."""
-        super(SubscriptionsController, self).__init__(config)
+        """Initialize ChargesApi object."""
+        super(ChargesApi, self).__init__(config)
 
-    def create_subscription(self,
-                            idempotency_key=None,
-                            body=None):
-        """Perform a POST request to /subscriptions.
+    def create_charge(self,
+                      idempotency_key=None,
+                      body=None):
+        """Perform a POST request to /charges.
 
-        Creates a new subscription.
+        Creates a charge on a payment instrument (e.g. transaction token).
 
         Args:
             idempotency_key (str, optional): An optional idempotency key to prevent
                 double charges and duplicate operations. We recommend a randomly
                 generated UUID (v4).
-            body (SubscriptionCreateRequest, optional): Create Subscription request
+            body (ChargeCreateRequest, optional): Request payload for creating a
+                charge.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription Created
+                information such as status codes and headers. Charge Created
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -80,7 +81,7 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/subscriptions")
+            .path("/charges")
             .http_method(HttpMethodEnum.POST)
             .header_param(Parameter()
                 .key("Content-Type")
@@ -98,25 +99,25 @@ class SubscriptionsController(BaseController):
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
+            .deserialize_into(Charge.from_dictionary)
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("401",
                 "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("403",
                 "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("404",
                 "HTTP 404 Not Found: {$response.body#/code}",
                 ApiException)
             .local_error_template("409",
                 "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",
@@ -132,13 +133,27 @@ class SubscriptionsController(BaseController):
                 ApiException),
         ).execute()
 
-    def list_all_subscriptions(self,
-                               limit=10,
-                               cursor=None,
-                               cursor_direction="desc"):
-        """Perform a GET request to /subscriptions.
+    def list_all_charges(self,
+                         limit=10,
+                         cursor=None,
+                         cursor_direction="desc",
+                         last_four=None,
+                         name=None,
+                         exp_month=None,
+                         exp_year=None,
+                         mfrom=None,
+                         to=None,
+                         email=None,
+                         phone=None,
+                         amount_from=None,
+                         amount_to=None,
+                         currency=None,
+                         mode=None,
+                         metadata=None,
+                         transaction_token_id=None):
+        """Perform a GET request to /charges.
 
-        Lists all subscriptions across all stores.
+        Lists all charges across all stores for the authenticated user.
 
         Args:
             limit (int, optional): Maximum number of resources to return in one page.
@@ -146,10 +161,32 @@ class SubscriptionsController(BaseController):
                 pagination should continue.
             cursor_direction (CursorDirectionQuery, optional): Pagination direction
                 relative to the supplied cursor.
+            last_four (str, optional): Filter by the last 4 digits of the card.
+                **Note:** If specified, `name`, `exp_month`, and `exp_year` must also
+                be included.
+            name (str, optional): Filter by cardholder name.  **Note:** If specified,
+                `last_four`, `exp_month`, and `exp_year` must also be included.
+            exp_month (int, optional): Filter by expiration month.  **Note:** If
+                specified, `last_four`, `name`, and `exp_year` must also be included.
+            exp_year (int, optional): Filter by expiration year.  **Note:** If
+                specified, `last_four`, `name`, and `exp_month` must also be included.
+            mfrom (str, optional): Show charges created on or after this date
+                (ISO-8601).
+            to (str, optional): Show charges created before this date (ISO-8601).
+            email (str, optional): Filter by email address.
+            phone (str, optional): Filter by phone number.
+            amount_from (int, optional): Show charges with an amount greater than or
+                equal to this value.
+            amount_to (int, optional): Show charges with an amount strictly less than
+                this value.
+            currency (str, optional): Filter by currency (ISO-4217).
+            mode (ModeQuery, optional): Filter by environment mode.
+            metadata (str, optional): Filter by metadata.
+            transaction_token_id (uuid|str, optional): Filter by transaction token ID.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. List of Subscriptions
+                information such as status codes and headers. List of Charges
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -159,7 +196,7 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/subscriptions")
+            .path("/charges")
             .http_method(HttpMethodEnum.GET)
             .query_param(Parameter()
                 .key("limit")
@@ -170,6 +207,48 @@ class SubscriptionsController(BaseController):
             .query_param(Parameter()
                 .key("cursor_direction")
                 .value(cursor_direction))
+            .query_param(Parameter()
+                .key("last_four")
+                .value(last_four))
+            .query_param(Parameter()
+                .key("name")
+                .value(name))
+            .query_param(Parameter()
+                .key("exp_month")
+                .value(exp_month))
+            .query_param(Parameter()
+                .key("exp_year")
+                .value(exp_year))
+            .query_param(Parameter()
+                .key("from")
+                .value(mfrom))
+            .query_param(Parameter()
+                .key("to")
+                .value(to))
+            .query_param(Parameter()
+                .key("email")
+                .value(email))
+            .query_param(Parameter()
+                .key("phone")
+                .value(phone))
+            .query_param(Parameter()
+                .key("amount_from")
+                .value(amount_from))
+            .query_param(Parameter()
+                .key("amount_to")
+                .value(amount_to))
+            .query_param(Parameter()
+                .key("currency")
+                .value(currency))
+            .query_param(Parameter()
+                .key("mode")
+                .value(mode))
+            .query_param(Parameter()
+                .key("metadata")
+                .value(metadata))
+            .query_param(Parameter()
+                .key("transaction_token_id")
+                .value(transaction_token_id))
             .header_param(Parameter()
                 .key("accept")
                 .value("application/json"))
@@ -177,25 +256,25 @@ class SubscriptionsController(BaseController):
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(SubscriptionList.from_dictionary)
+            .deserialize_into(ChargeList.from_dictionary)
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("401",
                 "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("403",
                 "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("404",
                 "HTTP 404 Not Found: {$response.body#/code}",
                 ApiException)
             .local_error_template("409",
                 "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",
@@ -211,34 +290,62 @@ class SubscriptionsController(BaseController):
                 ApiException),
         ).execute()
 
-    def list_store_subscriptions(self,
-                                 store_id,
-                                 search=None,
-                                 status=None,
-                                 mode=None,
-                                 limit=10,
-                                 cursor=None,
-                                 cursor_direction="desc"):
-        """Perform a GET request to /stores/{storeId}/subscriptions.
+    def list_store_charges(self,
+                           store_id,
+                           limit=10,
+                           cursor=None,
+                           cursor_direction="desc",
+                           last_four=None,
+                           name=None,
+                           exp_month=None,
+                           exp_year=None,
+                           mfrom=None,
+                           to=None,
+                           email=None,
+                           phone=None,
+                           amount_from=None,
+                           amount_to=None,
+                           currency=None,
+                           mode=None,
+                           metadata=None,
+                           transaction_token_id=None):
+        """Perform a GET request to /stores/{storeId}/charges.
 
-        Lists all subscriptions for a specific store.
+        Lists all charges for a specific store.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
-            search (str, optional): Search by metadata values.
-            status (SubscriptionStatus, optional): Filter subscriptions by current
-                status.
-            mode (ChargeMode, optional): Filter subscriptions by processing mode.
             limit (int, optional): Maximum number of resources to return in one page.
             cursor (uuid|str, optional): Cursor pointing to the resource after which
                 pagination should continue.
             cursor_direction (CursorDirectionQuery, optional): Pagination direction
                 relative to the supplied cursor.
+            last_four (str, optional): Filter by the last 4 digits of the card.
+                **Note:** If specified, `name`, `exp_month`, and `exp_year` must also
+                be included.
+            name (str, optional): Filter by cardholder name.  **Note:** If specified,
+                `last_four`, `exp_month`, and `exp_year` must also be included.
+            exp_month (int, optional): Filter by expiration month.  **Note:** If
+                specified, `last_four`, `name`, and `exp_year` must also be included.
+            exp_year (int, optional): Filter by expiration year.  **Note:** If
+                specified, `last_four`, `name`, and `exp_month` must also be included.
+            mfrom (str, optional): Show charges created on or after this date
+                (ISO-8601).
+            to (str, optional): Show charges created before this date (ISO-8601).
+            email (str, optional): Filter by email address.
+            phone (str, optional): Filter by phone number.
+            amount_from (int, optional): Show charges with an amount greater than or
+                equal to this value.
+            amount_to (int, optional): Show charges with an amount strictly less than
+                this value.
+            currency (str, optional): Filter by currency (ISO-4217).
+            mode (ModeQuery, optional): Filter by environment mode.
+            metadata (str, optional): Filter by metadata.
+            transaction_token_id (uuid|str, optional): Filter by transaction token ID.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. List of subscriptions
-                retrieved successfully.
+                information such as status codes and headers. List of Charges
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -248,7 +355,7 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions")
+            .path("/stores/{storeId}/charges")
             .http_method(HttpMethodEnum.GET)
             .template_param(Parameter()
                 .key("storeId")
@@ -256,15 +363,6 @@ class SubscriptionsController(BaseController):
                 .is_required(True)
                 .should_encode(True))
             .query_param(Parameter()
-                .key("search")
-                .value(search))
-            .query_param(Parameter()
-                .key("status")
-                .value(status))
-            .query_param(Parameter()
-                .key("mode")
-                .value(mode))
-            .query_param(Parameter()
                 .key("limit")
                 .value(limit))
             .query_param(Parameter()
@@ -273,6 +371,48 @@ class SubscriptionsController(BaseController):
             .query_param(Parameter()
                 .key("cursor_direction")
                 .value(cursor_direction))
+            .query_param(Parameter()
+                .key("last_four")
+                .value(last_four))
+            .query_param(Parameter()
+                .key("name")
+                .value(name))
+            .query_param(Parameter()
+                .key("exp_month")
+                .value(exp_month))
+            .query_param(Parameter()
+                .key("exp_year")
+                .value(exp_year))
+            .query_param(Parameter()
+                .key("from")
+                .value(mfrom))
+            .query_param(Parameter()
+                .key("to")
+                .value(to))
+            .query_param(Parameter()
+                .key("email")
+                .value(email))
+            .query_param(Parameter()
+                .key("phone")
+                .value(phone))
+            .query_param(Parameter()
+                .key("amount_from")
+                .value(amount_from))
+            .query_param(Parameter()
+                .key("amount_to")
+                .value(amount_to))
+            .query_param(Parameter()
+                .key("currency")
+                .value(currency))
+            .query_param(Parameter()
+                .key("mode")
+                .value(mode))
+            .query_param(Parameter()
+                .key("metadata")
+                .value(metadata))
+            .query_param(Parameter()
+                .key("transaction_token_id")
+                .value(transaction_token_id))
             .header_param(Parameter()
                 .key("accept")
                 .value("application/json"))
@@ -280,25 +420,25 @@ class SubscriptionsController(BaseController):
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(SubscriptionList.from_dictionary)
+            .deserialize_into(ChargeList.from_dictionary)
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("401",
                 "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiException)
+                ApiErrorException)
             .local_error_template("403",
                 "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("404",
                 "HTTP 404 Not Found: {$response.body#/code}",
                 ApiException)
             .local_error_template("409",
                 "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",
@@ -314,26 +454,24 @@ class SubscriptionsController(BaseController):
                 ApiException),
         ).execute()
 
-    def get_subscription(self,
-                         store_id,
-                         id,
-                         polling=None):
-        """Perform a GET request to /stores/{storeId}/subscriptions/{id}.
+    def get_charge(self,
+                   store_id,
+                   id,
+                   polling=None):
+        """Perform a GET request to /stores/{storeId}/charges/{id}.
 
-        Retrieves the details of an existing subscription.  Supports internal polling
-        to wait for status changes.
+        Retrieves the details of an existing charge.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
-            id (uuid|str): The Subscription ID.
+            id (uuid|str): The unique identifier of the resource.
             polling (bool, optional): If set to true, instructs the API to internally
-                poll the subscription  status until it changes from 'unverified' (the
-                initial status) to  another status.
+                poll the charge status  until it changes from 'pending' (the initial
+                status) to another status.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription Details
-                retrieved successfully.
+                information such as status codes and headers. Charge Details
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -343,7 +481,7 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{id}")
+            .path("/stores/{storeId}/charges/{id}")
             .http_method(HttpMethodEnum.GET)
             .template_param(Parameter()
                 .key("storeId")
@@ -365,25 +503,25 @@ class SubscriptionsController(BaseController):
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
+            .deserialize_into(Charge.from_dictionary)
             .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
             .local_error_template("401",
                 "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
                 ApiErrorException)
             .local_error_template("404",
                 "HTTP 404 Not Found: {$response.body#/code}",
                 ApiErrorException)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("409",
                 "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",
@@ -399,15 +537,14 @@ class SubscriptionsController(BaseController):
                 ApiException),
         ).execute()
 
-    def update_subscription(self,
-                            store_id,
-                            id,
-                            idempotency_key=None,
-                            body=None):
-        """Perform a PATCH request to /stores/{storeId}/subscriptions/{id}.
+    def update_charge(self,
+                      store_id,
+                      id,
+                      idempotency_key=None,
+                      body=None):
+        """Perform a PATCH request to /stores/{storeId}/charges/{id}.
 
-        Updates the configuration, payment method, or schedule of a specific
-        subscription.
+        Use this request to add or modify arbitrary metadata on an existing charge.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
@@ -415,13 +552,12 @@ class SubscriptionsController(BaseController):
             idempotency_key (str, optional): An optional idempotency key to prevent
                 double charges and duplicate operations. We recommend a randomly
                 generated UUID (v4).
-            body (SubscriptionUpdateRequest, optional): Properties to update on the
-                subscription.
+            body (ChargeUpdateRequest, optional): Request payload for updating charge
+                metadata.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription Updated
-                successfully.
+                information such as status codes and headers. Updated Charge
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -431,7 +567,7 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{id}")
+            .path("/stores/{storeId}/charges/{id}")
             .http_method(HttpMethodEnum.PATCH)
             .template_param(Parameter()
                 .key("storeId")
@@ -455,759 +591,12 @@ class SubscriptionsController(BaseController):
                 .key("accept")
                 .value("application/json"))
             .body_serializer(APIHelper.json_serialize)
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def cancel_subscription(self,
-                            store_id,
-                            id):
-        """Perform a DELETE request to /stores/{storeId}/subscriptions/{id}.
-
-        Cancels an existing subscription. The subscription status will be
-        permanently changed to `canceled` and it cannot be resumed.  Please proceed
-        with caution.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            id (uuid|str): The unique identifier of the resource.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription
-                successfully canceled. No content.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{id}")
-            .http_method(HttpMethodEnum.DELETE)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("id")
-                .value(id)
-                .is_required(True)
-                .should_encode(True))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def list_subscription_payments(self,
-                                   store_id,
-                                   subscription_id,
-                                   limit=10,
-                                   cursor=None,
-                                   cursor_direction="desc"):
-        """Perform a GET request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/payments.
-
-        Retrieves a list of all historical and scheduled payments for a  specific
-        subscription.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            limit (int, optional): Maximum number of resources to return in one page.
-            cursor (uuid|str, optional): Cursor pointing to the resource after which
-                pagination should continue.
-            cursor_direction (CursorDirectionQuery, optional): Pagination direction
-                relative to the supplied cursor.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. List of subscription
-                payments retrieved successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/payments")
-            .http_method(HttpMethodEnum.GET)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .query_param(Parameter()
-                .key("limit")
-                .value(limit))
-            .query_param(Parameter()
-                .key("cursor")
-                .value(cursor))
-            .query_param(Parameter()
-                .key("cursor_direction")
-                .value(cursor_direction))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(SubscriptionPaymentList.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def get_subscription_payment(self,
-                                 store_id,
-                                 subscription_id,
-                                 payment_id):
-        """Perform a GET request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}.
-
-        Retrieves the details of an individual payment associated with a specific
-        subscription.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            payment_id (uuid|str): The unique identifier of the scheduled payment of
-                a subscription
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription Payment
-                retrieved successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}")
-            .http_method(HttpMethodEnum.GET)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("paymentId")
-                .value(payment_id)
-                .is_required(True)
-                .should_encode(True))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(SubscriptionPayment.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def update_subscription_payment(self,
-                                    store_id,
-                                    subscription_id,
-                                    payment_id,
-                                    body,
-                                    idempotency_key=None):
-        """Perform a PATCH request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}.
-
-        Updates properties of a specific scheduled payment for a subscription. Can be
-        used to change the due date when permitted, mark the payment as paid,
-        schedule a termination status, or set a retry interval.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            payment_id (uuid|str): The unique identifier of the scheduled payment of
-                a subscription
-            body (SubscriptionPatchPaymentRequest): Request payload for updating a
-                scheduled subscription payment.
-            idempotency_key (str, optional): An optional idempotency key to prevent
-                double charges and duplicate operations. We recommend a randomly
-                generated UUID (v4).
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Scheduled payment
-                updated successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}")
-            .http_method(HttpMethodEnum.PATCH)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("paymentId")
-                .value(payment_id)
-                .is_required(True)
-                .should_encode(True))
-            .header_param(Parameter()
-                .key("Content-Type")
-                .value("application/json"))
-            .body_param(Parameter()
-                .value(body)
-                .is_required(True))
-            .header_param(Parameter()
-                .key("Idempotency-Key")
-                .value(idempotency_key))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .body_serializer(APIHelper.json_serialize)
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(SubscriptionPayment.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def get_subscription_latest_charge(self,
-                                       store_id,
-                                       subscription_id):
-        """Perform a GET request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/charges/latest.
-
-        Retrieves the most recent charge created for a specific subscription. Returns
-        404 if no charges have been attempted yet.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Latest charge retrieved
-                successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/charges/latest")
-            .http_method(HttpMethodEnum.GET)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
             .auth(Single("JWT_TOKEN")),
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
             .deserialize_into(Charge.from_dictionary)
             .is_api_response(True)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def list_subscription_charges(self,
-                                  merchant_id,
-                                  store_id,
-                                  subscription_id,
-                                  limit=10,
-                                  cursor=None,
-                                  cursor_direction="desc"):
-        """Perform a GET request to
-        /merchants/{merchantId}/stores/{storeId}/subscriptions/{subscriptionId}/charges
-        .
-
-        Retrieves a paginated list of charges linked to a subscription. Backend
-        search uses the same charge search surface as normal charge listing and adds
-        a subscription filter for the requested subscription.
-
-        Args:
-            merchant_id (uuid|str): The unique identifier of the merchant.
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            limit (int, optional): Maximum number of resources to return in one page.
-            cursor (uuid|str, optional): Cursor pointing to the resource after which
-                pagination should continue.
-            cursor_direction (CursorDirectionQuery, optional): Pagination direction
-                relative to the supplied cursor.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription charges
-                retrieved successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/merchants/{merchantId}/stores/{storeId}/subscriptions/{subscriptionId}/charges")
-            .http_method(HttpMethodEnum.GET)
-            .template_param(Parameter()
-                .key("merchantId")
-                .value(merchant_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .query_param(Parameter()
-                .key("limit")
-                .value(limit))
-            .query_param(Parameter()
-                .key("cursor")
-                .value(cursor))
-            .query_param(Parameter()
-                .key("cursor_direction")
-                .value(cursor_direction))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(ChargeList.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def list_charges_for_subscription_payment(self,
-                                              store_id,
-                                              subscription_id,
-                                              payment_id,
-                                              limit=10,
-                                              cursor=None,
-                                              cursor_direction="desc"):
-        """Perform a GET request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}/charges.
-
-        Retrieves a paginated list of all charge attempts made for a specific
-        scheduled payment of a subscription. Useful for inspecting retry history.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            payment_id (uuid|str): The unique identifier of the scheduled payment of
-                a subscription
-            limit (int, optional): Maximum number of resources to return in one page.
-            cursor (uuid|str, optional): Cursor pointing to the resource after which
-                pagination should continue.
-            cursor_direction (CursorDirectionQuery, optional): Pagination direction
-                relative to the supplied cursor.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. List of charges for the
-                scheduled payment retrieved successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/payments/{paymentId}/charges")
-            .http_method(HttpMethodEnum.GET)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("paymentId")
-                .value(payment_id)
-                .is_required(True)
-                .should_encode(True))
-            .query_param(Parameter()
-                .key("limit")
-                .value(limit))
-            .query_param(Parameter()
-                .key("cursor")
-                .value(cursor))
-            .query_param(Parameter()
-                .key("cursor_direction")
-                .value(cursor_direction))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(ChargeList.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def suspend_subscription(self,
-                             store_id,
-                             subscription_id,
-                             idempotency_key=None,
-                             body=None):
-        """Perform a PATCH request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/suspend.
-
-        Suspends a subscription that is currently `current` or `unpaid`. The
-        `termination_mode` controls when the suspension takes effect: `immediate`
-        (default) suspends right away, `on_next_payment` waits until the next
-        scheduled payment date before suspending.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            idempotency_key (str, optional): An optional idempotency key to prevent
-                double charges and duplicate operations. We recommend a randomly
-                generated UUID (v4).
-            body (SubscriptionSuspendRequest, optional): Request payload for
-                suspending a subscription.
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription suspended
-                successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/suspend")
-            .http_method(HttpMethodEnum.PATCH)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .header_param(Parameter()
-                .key("Content-Type")
-                .value("application/json"))
-            .header_param(Parameter()
-                .key("Idempotency-Key")
-                .value(idempotency_key))
-            .body_param(Parameter()
-                .value(body))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .body_serializer(APIHelper.json_serialize)
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
-            .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
                 ApiErrorException)
@@ -1240,27 +629,30 @@ class SubscriptionsController(BaseController):
                 ApiException),
         ).execute()
 
-    def unsuspend_subscription(self,
-                               store_id,
-                               subscription_id,
-                               idempotency_key=None):
-        """Perform a PATCH request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/unsuspend.
+    def capture_charge(self,
+                       store_id,
+                       id,
+                       body,
+                       idempotency_key=None):
+        """Perform a POST request to /stores/{storeId}/charges/{id}/capture.
 
-        Resumes a subscription that is currently `suspended`, setting its status back
-        to `unpaid` and rescheduling the next payment. No request body is required.
+        Captures a previously authorized charge (where `capture` was set to false
+        during creation).  The capture amount must be less than or equal to the
+        authorized amount, and the currency must match.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
+            id (uuid|str): The unique identifier of the resource.
+            body (ChargeCaptureRequest): Request payload for capturing an authorized
+                charge.
             idempotency_key (str, optional): An optional idempotency key to prevent
                 double charges and duplicate operations. We recommend a randomly
                 generated UUID (v4).
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription
-                unsuspended successfully.
+                information such as status codes and headers. Captured successfully.
+                Returns an empty JSON object.
 
         Raises:
             ApiException: When an error occurs while fetching the data from the
@@ -1270,108 +662,16 @@ class SubscriptionsController(BaseController):
         """
         return super().new_api_call_builder.request(
             RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/unsuspend")
-            .http_method(HttpMethodEnum.PATCH)
+            .path("/stores/{storeId}/charges/{id}/capture")
+            .http_method(HttpMethodEnum.POST)
             .template_param(Parameter()
                 .key("storeId")
                 .value(store_id)
                 .is_required(True)
                 .should_encode(True))
             .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
-                .is_required(True)
-                .should_encode(True))
-            .header_param(Parameter()
-                .key("Idempotency-Key")
-                .value(idempotency_key))
-            .header_param(Parameter()
-                .key("accept")
-                .value("application/json"))
-            .auth(Single("JWT_TOKEN")),
-        ).response(
-            ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
-            .is_api_response(True)
-            .local_error_template("400",
-                "HTTP 400 Bad Request: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("401",
-                "HTTP 401 Unauthorized: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("403",
-                "HTTP 403 Forbidden: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("404",
-                "HTTP 404 Not Found: {$response.body#/code}",
-                ApiErrorException)
-            .local_error_template("429",
-                "HTTP 429 Rate Limited: {$response.body#/code}",
-                ApiException)
-            .local_error_template("409",
-                "HTTP 409 Conflict: {$response.body#/code}",
-                ApiException)
-            .local_error_template("500",
-                "HTTP 500 Server Error: {$response.body#/code}",
-                ApiException)
-            .local_error_template("503",
-                "HTTP 503 Unavailable: {$response.body#/code}",
-                ApiException)
-            .local_error_template("504",
-                "HTTP 504 Timeout: {$response.body#/code}",
-                ApiException)
-            .local_error_template("default",
-                "HTTP {$statusCode}: {$response.body#/code}",
-                ApiException),
-        ).execute()
-
-    def update_subscription_token(self,
-                                  store_id,
-                                  subscription_id,
-                                  body,
-                                  idempotency_key=None):
-        """Perform a PATCH request to
-        /stores/{storeId}/subscriptions/{subscriptionId}/token.
-
-        Replaces the payment method (transaction token) used for a subscription.
-        Useful when a card expires or a customer wants to switch payment methods. The
-        new token must belong to the same store, be active, and match the
-        subscription's processing mode (live/test). One-time tokens are not accepted;
-        use a recurring or subscription token.
-
-        Args:
-            store_id (uuid|str): The unique identifier of the store.
-            subscription_id (uuid|str): The unique identifier of the subscription.
-            body (SubscriptionPatchTokenRequest): Request payload for replacing a
-                subscription payment token.
-            idempotency_key (str, optional): An optional idempotency key to prevent
-                double charges and duplicate operations. We recommend a randomly
-                generated UUID (v4).
-
-        Returns:
-            ApiResponse: An object with the response value as well as other useful
-                information such as status codes and headers. Subscription token
-                updated successfully.
-
-        Raises:
-            ApiException: When an error occurs while fetching the data from the
-                remote API. This exception includes the HTTP Response code, an error
-                message, and the HTTP body that was received in the request.
-
-        """
-        return super().new_api_call_builder.request(
-            RequestBuilder().server(Server.DEFAULT)
-            .path("/stores/{storeId}/subscriptions/{subscriptionId}/token")
-            .http_method(HttpMethodEnum.PATCH)
-            .template_param(Parameter()
-                .key("storeId")
-                .value(store_id)
-                .is_required(True)
-                .should_encode(True))
-            .template_param(Parameter()
-                .key("subscriptionId")
-                .value(subscription_id)
+                .key("id")
+                .value(id)
                 .is_required(True)
                 .should_encode(True))
             .header_param(Parameter()
@@ -1391,7 +691,550 @@ class SubscriptionsController(BaseController):
         ).response(
             ResponseHandler()
             .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(Subscription.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def get_charge_issuer_token(self,
+                                store_id,
+                                id):
+        """Perform a GET request to
+        /stores/{storeId}/charges/{id}/issuer_token.
+
+        Retrieves the necessary payment execution URL (for online payments) or bank
+        account details (for bank transfers).
+        **⚠️ Prerequisite:** The charge `status` must be `awaiting` before requesting
+        the issuer token.  If requested while the charge is in any other status, an
+        error will be returned.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            id (uuid|str): The unique identifier of the resource.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Issuer token or bank
+                transfer instructions retrieved successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{id}/issuer_token")
+            .http_method(HttpMethodEnum.GET)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(IssuerToken.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def get_charge_three_ds_issuer_token(self,
+                                         store_id,
+                                         id):
+        """Perform a GET request to
+        /stores/{storeId}/charges/{id}/three_ds/issuer_token.
+
+        Retrieves the 3-D Secure issuer token details required to authenticate a card
+        charge.
+        **⚠️ Prerequisites:** 1. The charge must be created with `three_ds.mode` set
+        to `normal` or `force`. 2. You must poll the charge until its `status`
+        becomes `awaiting` before making this request.
+        **Execution Flow:** Once retrieved, the client (browser) must execute an
+        `http_post` request to the `issuer_token` URL.  The `payload` object must be
+        formatted according to the `content_type` (e.g., URL-encoded) and sent in the
+        body. You can execute this via a redirect or inside an iframe. If using an
+        iframe, continue polling the charge status  in the background until it
+        reaches `successful`, `failed`, or `error`.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            id (uuid|str): The unique identifier of the resource.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. 3DS Redirect details
+                retrieved successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{id}/three_ds/issuer_token")
+            .http_method(HttpMethodEnum.GET)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(ThreeDsIssuerToken.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def list_bank_transfer_ledgers(self,
+                                   store_id,
+                                   id):
+        """Perform a GET request to
+        /stores/{storeId}/charges/{id}/bank_transfer_ledgers.
+
+        Retrieves bank transfer ledger entries associated with a charge.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            id (uuid|str): The unique identifier of the resource.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Ledger entries
+                (deposits/payments)
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{id}/bank_transfer_ledgers")
+            .http_method(HttpMethodEnum.GET)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(BankTransferLedgerList.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def create_customs_declaration(self,
+                                   store_id,
+                                   charge_id,
+                                   body,
+                                   idempotency_key=None):
+        """Perform a POST request to
+        /stores/{storeId}/charges/{chargeId}/customs.
+
+        Creates a customs declaration for a successful charge. Backend only accepts
+        this request for WeChat Online and WeChat MPM charges. If a declaration
+        already exists and is no longer pending, the backend updates its identity
+        fields and restarts processing instead of creating a new record.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            charge_id (uuid|str): The unique identifier of the charge.
+            body (CustomsDeclarationCreateRequest): Request payload for creating a
+                customs declaration.
+            idempotency_key (str, optional): An optional idempotency key to prevent
+                double charges and duplicate operations. We recommend a randomly
+                generated UUID (v4).
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Existing customs
+                declaration updated and resubmitted successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{chargeId}/customs")
+            .http_method(HttpMethodEnum.POST)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("chargeId")
+                .value(charge_id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .body_param(Parameter()
+                .value(body)
+                .is_required(True))
+            .header_param(Parameter()
+                .key("Idempotency-Key")
+                .value(idempotency_key))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(CustomsDeclarationWebhookData.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def get_customs_declaration(self,
+                                store_id,
+                                charge_id,
+                                id,
+                                polling=False):
+        """Perform a GET request to
+        /stores/{storeId}/charges/{chargeId}/customs/{id}.
+
+        Retrieves a customs declaration for a charge. Supports long polling when
+        `polling=true`, returning once the declaration leaves its current state or
+        the polling timeout is reached.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            charge_id (uuid|str): The unique identifier of the charge.
+            id (uuid|str): The unique identifier of the customs declaration.
+            polling (bool, optional): Hold the request open while waiting for a
+                status change.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Customs declaration
+                retrieved successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{chargeId}/customs/{id}")
+            .http_method(HttpMethodEnum.GET)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("chargeId")
+                .value(charge_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .query_param(Parameter()
+                .key("polling")
+                .value(polling))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(CustomsDeclarationWebhookData.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def patch_customs_declaration(self,
+                                  store_id,
+                                  charge_id,
+                                  id,
+                                  body,
+                                  idempotency_key=None):
+        """Perform a PATCH request to
+        /stores/{storeId}/charges/{chargeId}/customs/{id}.
+
+        Updates a customs declaration and requeues processing. Backend patching
+        preserves the original `customs`, `certificate_id`, and `certificate_name`
+        values and only accepts a new `merchant_customs_no`. Pending declarations
+        cannot be patched.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            charge_id (uuid|str): The unique identifier of the charge.
+            id (uuid|str): The unique identifier of the customs declaration.
+            body (CustomsDeclarationPatchRequest): Request payload for patching a
+                customs declaration.
+            idempotency_key (str, optional): An optional idempotency key to prevent
+                double charges and duplicate operations. We recommend a randomly
+                generated UUID (v4).
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Customs declaration
+                updated successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/charges/{chargeId}/customs/{id}")
+            .http_method(HttpMethodEnum.PATCH)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("chargeId")
+                .value(charge_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .body_param(Parameter()
+                .value(body)
+                .is_required(True))
+            .header_param(Parameter()
+                .key("Idempotency-Key")
+                .value(idempotency_key))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(CustomsDeclarationWebhookData.from_dictionary)
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",

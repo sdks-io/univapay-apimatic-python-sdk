@@ -13,11 +13,11 @@ from apimatic_core.response_handler import ResponseHandler
 from apimatic_core.types.parameter import Parameter
 
 from univapayclientsdk.api_helper import APIHelper
+from univapayclientsdk.apis.base_api import (
+    BaseApi,
+)
 from univapayclientsdk.configuration import (
     Server,
-)
-from univapayclientsdk.controllers.base_controller import (
-    BaseController,
 )
 from univapayclientsdk.exceptions.api_error_exception import (
     ApiErrorException,
@@ -39,12 +39,12 @@ from univapayclientsdk.models.transaction_token_list import (
 )
 
 
-class TransactionTokensController(BaseController):
+class TransactionTokensApi(BaseApi):
     """A Controller to access Endpoints in the univapayclientsdk API."""
 
     def __init__(self, config):
-        """Initialize TransactionTokensController object."""
-        super(TransactionTokensController, self).__init__(config)
+        """Initialize TransactionTokensApi object."""
+        super(TransactionTokensApi, self).__init__(config)
 
     def create_transaction_token(self,
                                  body,

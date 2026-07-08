@@ -13,11 +13,11 @@ from apimatic_core.response_handler import ResponseHandler
 from apimatic_core.types.parameter import Parameter
 
 from univapayclientsdk.api_helper import APIHelper
+from univapayclientsdk.apis.base_api import (
+    BaseApi,
+)
 from univapayclientsdk.configuration import (
     Server,
-)
-from univapayclientsdk.controllers.base_controller import (
-    BaseController,
 )
 from univapayclientsdk.exceptions.api_error_exception import (
     ApiErrorException,
@@ -36,12 +36,12 @@ from univapayclientsdk.models.refund_list import (
 )
 
 
-class RefundsController(BaseController):
+class RefundsApi(BaseApi):
     """A Controller to access Endpoints in the univapayclientsdk API."""
 
     def __init__(self, config):
-        """Initialize RefundsController object."""
-        super(RefundsController, self).__init__(config)
+        """Initialize RefundsApi object."""
+        super(RefundsApi, self).__init__(config)
 
     def list_refunds(self,
                      store_id,

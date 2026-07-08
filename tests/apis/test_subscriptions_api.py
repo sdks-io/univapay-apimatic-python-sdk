@@ -11,9 +11,7 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.controllers.controller_test_base import (
-    ControllerTestBase,
-)
+from tests.apis.api_test_base import ApiTestBase
 from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.subscription_create_request import (
     SubscriptionCreateRequest,
@@ -32,7 +30,7 @@ from univapayclientsdk.models.subscription_update_request import (
 )
 
 
-class SubscriptionsControllerTests(ControllerTestBase):
+class SubscriptionsApiTests(ApiTestBase):
     """
     Endpoint tests for validating the API behavior.
 

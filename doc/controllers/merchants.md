@@ -3,12 +3,12 @@
 Merchant identity and effective configuration endpoints for authenticated operators.
 
 ```python
-merchants_controller = client.merchants
+merchants_api = client.merchants
 ```
 
 ## Class Name
 
-`MerchantsController`
+`MerchantsApi`
 
 
 # Get Current Merchant
@@ -32,7 +32,7 @@ This method returns an [`ApiResponse`](../../doc/api-response.md) instance. The 
 ## Example Usage
 
 ```python
-result = merchants_controller.get_current_merchant()
+result = merchants_api.get_current_merchant()
 
 if result.is_success():
     print(result.body)

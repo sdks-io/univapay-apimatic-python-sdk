@@ -11,9 +11,7 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.controllers.controller_test_base import (
-    ControllerTestBase,
-)
+from tests.apis.api_test_base import ApiTestBase
 from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.transaction_token_create_request import (
     TransactionTokenCreateRequest,
@@ -23,7 +21,7 @@ from univapayclientsdk.models.transaction_token_update_request import (
 )
 
 
-class TransactionTokensControllerTests(ControllerTestBase):
+class TransactionTokensApiTests(ApiTestBase):
     """
     Endpoint tests for validating the API behavior.
 

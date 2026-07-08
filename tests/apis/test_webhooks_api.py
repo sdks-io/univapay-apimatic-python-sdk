@@ -11,9 +11,7 @@ from apimatic_core.utilities.comparison_helper import (
     ComparisonHelper,
 )
 
-from tests.controllers.controller_test_base import (
-    ControllerTestBase,
-)
+from tests.apis.api_test_base import ApiTestBase
 from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.webhook_create_request import (
     WebhookCreateRequest,
@@ -23,7 +21,7 @@ from univapayclientsdk.models.webhook_update_request import (
 )
 
 
-class WebhooksControllerTests(ControllerTestBase):
+class WebhooksApiTests(ApiTestBase):
     """
     Endpoint tests for validating the API behavior.
 

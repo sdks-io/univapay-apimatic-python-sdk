@@ -3,12 +3,12 @@
 Endpoints to create and manage payments, authorizations, captures, and check payment status.
 
 ```python
-charges_controller = client.charges
+charges_api = client.charges
 ```
 
 ## Class Name
 
-`ChargesController`
+`ChargesApi`
 
 ## Methods
 
@@ -68,7 +68,7 @@ body = ChargeCreateRequest(
     )
 )
 
-result = charges_controller.create_charge(
+result = charges_api.create_charge(
     body=body
 )
 
@@ -219,7 +219,7 @@ metadata = 'order_id: 12345'
 
 transaction_token_id = 'f33b673e-564c-4645-ae17-ca03846a86b7'
 
-result = charges_controller.list_all_charges(
+result = charges_api.list_all_charges(
     limit=limit,
     cursor=cursor,
     cursor_direction=cursor_direction,
@@ -457,7 +457,7 @@ metadata = 'order_id: 12345'
 
 transaction_token_id = 'f33b673e-564c-4645-ae17-ca03846a86b7'
 
-result = charges_controller.list_store_charges(
+result = charges_api.list_store_charges(
     store_id,
     limit=limit,
     cursor=cursor,
@@ -606,7 +606,7 @@ id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
 polling = True
 
-result = charges_controller.get_charge(
+result = charges_api.get_charge(
     store_id,
     id,
     polling=polling
@@ -710,7 +710,7 @@ body = ChargeUpdateRequest(
     )
 )
 
-result = charges_controller.update_charge(
+result = charges_api.update_charge(
     store_id,
     id,
     body=body
@@ -813,7 +813,7 @@ body = ChargeCaptureRequest(
     currency='JPY'
 )
 
-result = charges_controller.capture_charge(
+result = charges_api.capture_charge(
     store_id,
     id,
     body
@@ -877,7 +877,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = charges_controller.get_charge_issuer_token(
+result = charges_api.get_charge_issuer_token(
     store_id,
     id
 )
@@ -948,7 +948,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = charges_controller.get_charge_three_ds_issuer_token(
+result = charges_api.get_charge_three_ds_issuer_token(
     store_id,
     id
 )
@@ -1018,7 +1018,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = charges_controller.list_bank_transfer_ledgers(
+result = charges_api.list_bank_transfer_ledgers(
     store_id,
     id
 )
@@ -1122,7 +1122,7 @@ body = CustomsDeclarationCreateRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = charges_controller.create_customs_declaration(
+result = charges_api.create_customs_declaration(
     store_id,
     charge_id,
     body,
@@ -1211,7 +1211,7 @@ id = '11ef0000-0000-4000-8000-000000000040'
 
 polling = False
 
-result = charges_controller.get_customs_declaration(
+result = charges_api.get_customs_declaration(
     store_id,
     charge_id,
     id,
@@ -1309,7 +1309,7 @@ body = CustomsDeclarationPatchRequest(
 
 idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
 
-result = charges_controller.patch_customs_declaration(
+result = charges_api.patch_customs_declaration(
     store_id,
     charge_id,
     id,

@@ -1,12 +1,12 @@
 # Transaction Tokens
 
 ```python
-transaction_tokens_controller = client.transaction_tokens
+transaction_tokens_api = client.transaction_tokens
 ```
 
 ## Class Name
 
-`TransactionTokensController`
+`TransactionTokensApi`
 
 ## Methods
 
@@ -76,7 +76,7 @@ body = TransactionTokenCreateRequest(
     )
 )
 
-result = transaction_tokens_controller.create_transaction_token(body)
+result = transaction_tokens_api.create_transaction_token(body)
 
 if result.is_success():
     print(result.body)
@@ -202,7 +202,7 @@ cursor = '3541d4fa-596d-428e-8a36-f274e1b3d505'
 
 cursor_direction = CursorDirectionQuery.ASC
 
-result = transaction_tokens_controller.list_all_transaction_tokens(
+result = transaction_tokens_api.list_all_transaction_tokens(
     limit=limit,
     cursor=cursor,
     cursor_direction=cursor_direction
@@ -328,7 +328,7 @@ cursor = '3541d4fa-596d-428e-8a36-f274e1b3d505'
 
 cursor_direction = CursorDirectionQuery.ASC
 
-result = transaction_tokens_controller.list_store_transaction_tokens(
+result = transaction_tokens_api.list_store_transaction_tokens(
     store_id,
     limit=limit,
     cursor=cursor,
@@ -447,7 +447,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = transaction_tokens_controller.get_transaction_token(
+result = transaction_tokens_api.get_transaction_token(
     store_id,
     id
 )
@@ -602,7 +602,7 @@ body = TransactionTokenUpdateRequest(
     )
 )
 
-result = transaction_tokens_controller.update_transaction_token(
+result = transaction_tokens_api.update_transaction_token(
     store_id,
     id,
     body=body
@@ -731,7 +731,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = transaction_tokens_controller.delete_transaction_token(
+result = transaction_tokens_api.delete_transaction_token(
     store_id,
     id
 )
@@ -792,7 +792,7 @@ store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
 
 id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
 
-result = transaction_tokens_controller.get_token_three_ds_issuer_token(
+result = transaction_tokens_api.get_token_three_ds_issuer_token(
     store_id,
     id
 )
