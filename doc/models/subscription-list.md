@@ -24,9 +24,15 @@ Paginated list of subscriptions.
 import dateutil.parser
 import jsonpickle
 
+from univapayclientsdk.models.combined_plan_type import CombinedPlanType
+from univapayclientsdk.models.plan_settings_type import PlanSettingsType
+from univapayclientsdk.models.subscription_installment_plan_response import SubscriptionInstallmentPlanResponse
 from univapayclientsdk.models.subscription_list import SubscriptionList
 from univapayclientsdk.models.subscription_list_item import SubscriptionListItem
+from univapayclientsdk.models.subscription_plan_settings import SubscriptionPlanSettings
 from univapayclientsdk.models.subscription_status import SubscriptionStatus
+from univapayclientsdk.models.subscription_three_ds import SubscriptionThreeDs
+from univapayclientsdk.models.subscription_three_ds_mode import SubscriptionThreeDsMode
 from univapayclientsdk.models.subscription_user_data import SubscriptionUserData
 
 subscription_list = SubscriptionList(
@@ -39,6 +45,22 @@ subscription_list = SubscriptionList(
             currency='USD',
             amount_formatted=12.5,
             status=SubscriptionStatus.CURRENT,
+            three_ds=SubscriptionThreeDs(
+                mode=SubscriptionThreeDsMode.NORMAL,
+                redirect_endpoint=None,
+                redirect_id=None,
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
+            subscription_plan=SubscriptionPlanSettings(
+                plan_type=PlanSettingsType.FIXED_CYCLES,
+                fixed_cycles=12,
+                fixed_cycle_amount=112,
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
             merchant_name='管理画面ガイド',
             store_name='管理画面ガイド_TEST店舗',
             payment_type='card',
@@ -47,7 +69,11 @@ subscription_list = SubscriptionList(
                 mtype='charge',
                 cardholder_name='taro yamada',
                 email='taro@test.com',
-                brand='visa'
+                brand='visa',
+                gateway='gateway6',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
             ),
             additional_properties={
                 'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
@@ -61,6 +87,22 @@ subscription_list = SubscriptionList(
             currency='JPY',
             amount_formatted=3000,
             status=SubscriptionStatus.CURRENT,
+            three_ds=SubscriptionThreeDs(
+                mode=SubscriptionThreeDsMode.NORMAL,
+                redirect_endpoint=None,
+                redirect_id=None,
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
+            installment_plan=SubscriptionInstallmentPlanResponse(
+                plan_type=CombinedPlanType.FIXED_CYCLE_AMOUNT,
+                fixed_cycles=None,
+                fixed_cycles_amount=30000,
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
             merchant_name='管理画面ガイド',
             store_name='管理画面ガイド_Online店舗',
             payment_type='card',
@@ -69,7 +111,11 @@ subscription_list = SubscriptionList(
                 mtype='charge',
                 cardholder_name='hanako suzuki',
                 email='hanako@test.com',
-                brand='mastercard'
+                brand='mastercard',
+                gateway='gateway6',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
             ),
             additional_properties={
                 'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')

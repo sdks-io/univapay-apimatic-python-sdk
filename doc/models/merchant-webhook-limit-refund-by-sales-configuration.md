@@ -21,17 +21,12 @@ Refund-limiting configuration based on sales history.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_limit_refund_by_sales_configuration import MerchantWebhookLimitRefundBySalesConfiguration
 
 merchant_webhook_limit_refund_by_sales_configuration = MerchantWebhookLimitRefundBySalesConfiguration(
     enabled=True,
     period='monthly',
-    rolling_window=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    rolling_window=True
 )
 ```
 

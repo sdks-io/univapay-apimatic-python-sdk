@@ -21,8 +21,6 @@ Request body to create a new store-level webhook subscription.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.webhook_create_request import WebhookCreateRequest
 from univapayclientsdk.models.webhook_trigger import WebhookTrigger
 
@@ -31,10 +29,7 @@ webhook_create_request = WebhookCreateRequest(
         WebhookTrigger.CHARGE_FINISHED
     ],
     url='https://example.com/webhooks/payments',
-    auth_token='my-secret-token',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    auth_token='my-secret-token'
 )
 ```
 

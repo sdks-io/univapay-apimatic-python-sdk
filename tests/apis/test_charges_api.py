@@ -410,23 +410,25 @@ class ChargesApiTests(ApiTestBase):
         """
         Captures a previously authorized charge (where `capture` was set to false
         during creation).  The capture amount must be less than or equal to the
-        authorized amount, and the currency must match.
+        authorized amount, and the currency must match. The request body — and both of
+        its fields — is optional: if omitted entirely, the full outstanding authorized
+        amount (in the originally requested currency) is captured.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"
         id = "c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4"
+        idempotency_key = "f64be872-353d-4c3c-84cb-3dc617fe89f7"
         body = APIHelper.json_deserialize(
             "{\"amount\":1000,\"currency\":\"JPY\"}",
             ChargeCaptureRequest.from_dictionary,
         )
-        idempotency_key = "f64be872-353d-4c3c-84cb-3dc617fe89f7"
 
         # Perform the API call through the SDK function
         result = self.controller.capture_charge(
             store_id,
             id,
-            body,
             idempotency_key,
+            body,
         )
         # Test response code
         assert self.response_catcher.response.status_code == 200
@@ -545,7 +547,12 @@ class ChargesApiTests(ApiTestBase):
 
     def test_list_bank_transfer_ledgers(self):
         """
-        Retrieves bank transfer ledger entries associated with a charge.
+        Retrieves bank transfer ledger entries associated with a charge. This is an
+        optional reconciliation endpoint — not part of the required
+        create-charge-and-poll flow.**⚠️ Requires a merchant-level application
+        token**, unlike the rest of the bank transfer flow. A store application token
+        (`Bearer {secret}.{jwt}` scoped to a `store_id`) is not sufficient here, even
+        though the path is store-scoped.
         """
         # Parameters for the API call
         store_id = "0cab399b-5621-425b-993b-f8507eba1e78"

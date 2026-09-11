@@ -15,12 +15,15 @@ Transaction Token Create Request Payment Type schema.
 | `ONLINE` |
 | `KONBINI` |
 | `BANK_TRANSFER` |
+| `QR_SCAN` |
+| `QR_MERCHANT` |
+| `PAIDY` |
 
 ## Example
 
 ```python
 from univapayclientsdk.models.transaction_token_create_request_payment_type import TransactionTokenCreateRequestPaymentType
 
-transaction_token_create_request_payment_type = TransactionTokenCreateRequestPaymentType.CARD
+transaction_token_create_request_payment_type = TransactionTokenCreateRequestPaymentType.QR_SCAN
 ```
 

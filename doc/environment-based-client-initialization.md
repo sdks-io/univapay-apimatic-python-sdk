@@ -30,7 +30,8 @@ Values provided through arguments take precedence over those defined in environm
 ## Example `.env` File
 
 ```python
-BASE_URL=https://api.univapay.com
+BASE_URL=https://api.gyro-n.money
+DIRECT_DEBIT_BASE_URL=https://staging-direct-debit.gopay-services.com
 ENVIRONMENT=production
 
 ACCESS_TOKEN=ExampleAccessToken

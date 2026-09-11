@@ -35,8 +35,6 @@ Bank transfer payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_bank_transfer_configuration import MerchantWebhookBankTransferConfiguration
 
 merchant_webhook_bank_transfer_configuration = MerchantWebhookBankTransferConfiguration(
@@ -51,10 +49,7 @@ merchant_webhook_bank_transfer_configuration = MerchantWebhookBankTransferConfig
     charge_request_notification_enabled=True,
     deposit_received_notification_enabled=True,
     remind_notification_period='P2D',
-    remind_notification_enabled=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    remind_notification_enabled=True
 )
 ```
 

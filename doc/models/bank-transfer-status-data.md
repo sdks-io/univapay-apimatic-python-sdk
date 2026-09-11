@@ -31,7 +31,6 @@ Data payload for `bank_transfer_status_updated` webhook events. Contains the ban
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.bank_transfer_payment_status import BankTransferPaymentStatus
 from univapayclientsdk.models.bank_transfer_status_data import BankTransferStatusData
@@ -53,10 +52,7 @@ bank_transfer_status_data = BankTransferStatusData(
     ),
     charge_metadata=GenericMetadata(
         order_id='order_12345'
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    )
 )
 ```
 

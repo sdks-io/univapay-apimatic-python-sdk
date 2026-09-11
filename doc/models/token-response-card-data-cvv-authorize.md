@@ -23,19 +23,14 @@ Token Response Card Data Cvv Authorize schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_response_card_data_cvv_authorize import TokenResponseCardDataCvvAuthorize
 
 token_response_card_data_cvv_authorize = TokenResponseCardDataCvvAuthorize(
     enabled=True,
-    status='successful',
+    status='current',
     charge_id=None,
     credentials_id=None,
-    currency='JPY',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    currency='JPY'
 )
 ```
 

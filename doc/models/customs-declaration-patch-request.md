@@ -19,15 +19,10 @@ Request body for updating a customs declaration. Backend patch handling keeps th
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.customs_declaration_patch_request import CustomsDeclarationPatchRequest
 
 customs_declaration_patch_request = CustomsDeclarationPatchRequest(
-    merchant_customs_no='1234567891',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    merchant_customs_no='1234567891'
 )
 ```
 

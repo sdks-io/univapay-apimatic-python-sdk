@@ -23,8 +23,6 @@ Token Create Konbini Data schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.base_konbini_data_convenience_store import BaseKonbiniDataConvenienceStore
 from univapayclientsdk.models.token_create_konbini_data import TokenCreateKonbiniData
 from univapayclientsdk.models.token_create_phone_number import TokenCreatePhoneNumber
@@ -34,16 +32,10 @@ token_create_konbini_data = TokenCreateKonbiniData(
     convenience_store=BaseKonbiniDataConvenienceStore.SEVEN_ELEVEN,
     phone_number=TokenCreatePhoneNumber(
         country_code='81',
-        local_number='08012341234',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        local_number='08012341234'
     ),
     expiration_period='P7D',
-    expiration_time_shift='23:59:59+09:00',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    expiration_time_shift='23:59:59+09:00'
 )
 ```
 

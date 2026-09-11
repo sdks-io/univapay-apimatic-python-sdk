@@ -37,11 +37,11 @@ The package is compatible with Python versions `3.7+`.
 Install the package from PyPi using the following pip command:
 
 ```bash
-pip install univapay-apimatic-sdk==0.0.4
+pip install univapay-apimatic-sdk==1.0.2
 ```
 
 You can also view the package at:
-https://pypi.python.org/pypi/univapay-apimatic-sdk/0.0.4
+https://pypi.python.org/pypi/univapay-apimatic-sdk/1.0.2
 
 ## Test the SDK
 
@@ -56,14 +56,15 @@ pytest
 
 ## Initialize the API Client
 
-**_Note:_** Documentation for the client can be found [here.](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/client.md)
+**_Note:_** Documentation for the client can be found [here.](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/client.md)
 
 The following parameters are configurable for the API Client:
 
 | Parameter | Type | Description |
 |  --- | --- | --- |
-| base_url | `str` | Base URL for the API<br>*Default*: `"https://api.univapay.com"` |
-| environment | [`Environment`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/README.md#environments) | The API environment. <br> **Default: `Environment.PRODUCTION`** |
+| base_url | `str` | Base URL for the API<br>*Default*: `"https://api.gyro-n.money"` |
+| direct_debit_base_url | `str` | Base URL for the Direct Debit API<br>*Default*: `"https://staging-direct-debit.gopay-services.com"` |
+| environment | [`Environment`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/README.md#environments) | The API environment. <br> **Default: `Environment.PRODUCTION`** |
 | http_client_instance | `Union[Session, HttpClientProvider]` | The Http Client passed from the sdk user for making requests |
 | override_http_client_configuration | `bool` | The value which determines to override properties of the passed Http Client from the sdk user |
 | http_call_back | `HttpCallBack` | The callback value that is invoked before and after an HTTP call is made to an endpoint |
@@ -72,9 +73,9 @@ The following parameters are configurable for the API Client:
 | backoff_factor | `float` | A backoff factor to apply between attempts after the second try. <br> **Default: 2** |
 | retry_statuses | `Array of int` | The http statuses on which retry is to be done. <br> **Default: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524]** |
 | retry_methods | `Array of string` | The http methods on which retry is to be done. <br> **Default: ["GET", "PUT"]** |
-| proxy_settings | [`ProxySettings`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/proxy-settings.md) | Optional proxy configuration to route HTTP requests through a proxy server. |
-| logging_configuration | [`LoggingConfiguration`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/logging-configuration.md) | The SDK logging configuration for API calls |
-| bearer_auth_credentials | [`BearerAuthCredentials`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/auth/oauth-2-bearer-token.md) | The credential object for OAuth 2 Bearer token |
+| proxy_settings | [`ProxySettings`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/proxy-settings.md) | Optional proxy configuration to route HTTP requests through a proxy server. |
+| logging_configuration | [`LoggingConfiguration`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/logging-configuration.md) | The SDK logging configuration for API calls |
+| bearer_auth_credentials | [`BearerAuthCredentials`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/auth/oauth-2-bearer-token.md) | The credential object for OAuth 2 Bearer token |
 
 The API client can be initialized as follows:
 
@@ -95,7 +96,8 @@ client = UnivapayClientSdkClient(
         access_token='AccessToken'
     ),
     environment=Environment.PRODUCTION,
-    base_url='https://api.univapay.com',
+    base_url='https://api.gyro-n.money',
+    direct_debit_base_url='https://staging-direct-debit.gopay-services.com',
     logging_configuration=LoggingConfiguration(
         log_level=logging.INFO,
         request_logging_config=RequestLoggingConfiguration(
@@ -117,7 +119,7 @@ from univapayclientsdk.univapay_client_sdk_client import UnivapayClientSdkClient
 client = UnivapayClientSdkClient.from_environment(dotenv_path='/path/to/.env')
 ```
 
-See the [Environment-Based Client Initialization](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/environment-based-client-initialization.md) section for details.
+See the [Environment-Based Client Initialization](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/environment-based-client-initialization.md) section for details.
 
 ## Environments
 
@@ -127,69 +129,60 @@ The SDK can be configured to use a different environment for making API calls. A
 
 | Name | Description |
 |  --- | --- |
-| PRODUCTION | **Default** Production Server |
+| PRODUCTION | **Default** Staging Server |
 
 ## Authorization
 
 This API uses the following authentication schemes.
 
-* [`JWT_TOKEN (OAuth 2 Bearer token)`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/auth/oauth-2-bearer-token.md)
+* [`JWT_TOKEN (OAuth 2 Bearer token)`](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/auth/oauth-2-bearer-token.md)
 
 ## List of APIs
 
-* [Transaction Tokens](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/transaction-tokens.md)
-* [Charges](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/charges.md)
-* [Refunds](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/refunds.md)
-* [Subscriptions](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/subscriptions.md)
-* [Cancels](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/cancels.md)
-* [Merchants](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/merchants.md)
-* [Stores](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/stores.md)
-* [Webhooks](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/controllers/webhooks.md)
+* [Transaction Tokens](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/transaction-tokens.md)
+* [Direct Debit](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/direct-debit.md)
+* [Transaction History](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/transaction-history.md)
+* [Charges](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/charges.md)
+* [Refunds](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/refunds.md)
+* [Subscriptions](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/subscriptions.md)
+* [Cancels](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/cancels.md)
+* [Merchants](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/merchants.md)
+* [Stores](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/stores.md)
+* [Webhooks](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/webhooks.md)
+* [Checkout](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/controllers/checkout.md)
 
 ## Webhooks
 
-* [Charge Updated](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/charge-updated-handler.md)
-* [Charge Finished](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/charge-finished-handler.md)
-* [Token Created](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-created-handler.md)
-* [Token Updated](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-updated-handler.md)
-* [Token Three Ds Updated](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-three-ds-updated-handler.md)
-* [Token Cvv Auth Updated](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-cvv-auth-updated-handler.md)
-* [Token Cvv Auth Check Updated](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-cvv-auth-check-updated-handler.md)
-* [Token Replaced](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/token-replaced-handler.md)
-* [Recurring Token Deleted](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/recurring-token-deleted-handler.md)
-* [Refund](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/refund-handler.md)
-* [Cancel](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/cancel-handler.md)
-* [Subscription Created](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-created-handler.md)
-* [Subscription Payment](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-payment-handler.md)
-* [Subscription Completed](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-completed-handler.md)
-* [Subscription Failure](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-failure-handler.md)
-* [Subscription Canceled](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-canceled-handler.md)
-* [Subscription Suspended](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/subscription-suspended-handler.md)
-* [Bank-Transfer](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/bank-transfer-handler.md)
-* [Customs](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/events/webhooks/customs-handler.md)
+* [Charge](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/charge-handler.md)
+* [Token](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/token-handler.md)
+* [Refund](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/refund-handler.md)
+* [Cancel](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/cancel-handler.md)
+* [Subscription](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/subscription-handler.md)
+* [Bank-Transfer](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/bank-transfer-handler.md)
+* [Customs](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/events/webhooks/customs-handler.md)
 
 ## SDK Infrastructure
 
 ### Configuration
 
-* [ProxySettings](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/proxy-settings.md)
-* [Environment-Based Client Initialization](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/environment-based-client-initialization.md)
-* [AbstractLogger](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/abstract-logger.md)
-* [LoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/logging-configuration.md)
-* [RequestLoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/request-logging-configuration.md)
-* [ResponseLoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/response-logging-configuration.md)
+* [ProxySettings](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/proxy-settings.md)
+* [Environment-Based Client Initialization](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/environment-based-client-initialization.md)
+* [AbstractLogger](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/abstract-logger.md)
+* [LoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/logging-configuration.md)
+* [RequestLoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/request-logging-configuration.md)
+* [ResponseLoggingConfiguration](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/response-logging-configuration.md)
 
 ### HTTP
 
-* [HttpResponse](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/http-response.md)
-* [HttpRequest](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/http-request.md)
-* [Request](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/request.md)
+* [HttpResponse](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/http-response.md)
+* [HttpRequest](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/http-request.md)
+* [Request](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/request.md)
 
 ### Utilities
 
-* [ApiResponse](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/api-response.md)
-* [ApiHelper](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/api-helper.md)
-* [HttpDateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/http-date-time.md)
-* [RFC3339DateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/rfc3339-date-time.md)
-* [UnixDateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/0.0.4/doc/unix-date-time.md)
+* [ApiResponse](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/api-response.md)
+* [ApiHelper](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/api-helper.md)
+* [HttpDateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/http-date-time.md)
+* [RFC3339DateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/rfc3339-date-time.md)
+* [UnixDateTime](https://www.github.com/sdks-io/univapay-apimatic-python-sdk/tree/1.0.2/doc/unix-date-time.md)
 

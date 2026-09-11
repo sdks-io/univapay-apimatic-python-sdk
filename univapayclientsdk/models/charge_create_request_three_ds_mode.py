@@ -10,12 +10,19 @@ class ChargeCreateRequestThreeDsMode(object):
     """Implementation of the 'ChargeCreateRequestThreeDsMode' enum.
 
     3D-Secure authentication type. App Token Secret is required to use 'skip'.
+    `if_available` enforces 3DS only if credentials are available for the recurring
+    token and it has not already completed 3DS. `provided` is set automatically by
+    the server when external MPI authentication data (`authentication_value`, `eci`,
+    etc.) is submitted on the request and cannot be set manually. When omitted, the
+    store's default 3DS policy applies — do not assume 'normal'.
 
     Attributes:
         NORMAL: The enum member of type str.
         REQUIRE: The enum member of type str.
         FORCE: The enum member of type str.
         SKIP: The enum member of type str.
+        IF_AVAILABLE: The enum member of type str.
+        PROVIDED: The enum member of type str.
 
     """
 
@@ -26,6 +33,10 @@ class ChargeCreateRequestThreeDsMode(object):
     FORCE = "force"
 
     SKIP = "skip"
+
+    IF_AVAILABLE = "if_available"
+
+    PROVIDED = "provided"
 
     @classmethod
     def from_value(cls, value, default=None):

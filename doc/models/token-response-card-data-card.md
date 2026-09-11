@@ -29,8 +29,6 @@ Token Response Card Data Card schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_response_card_data_card import TokenResponseCardDataCard
 
 token_response_card_data_card = TokenResponseCardDataCard(
@@ -44,10 +42,7 @@ token_response_card_data_card = TokenResponseCardDataCard(
     country='JP',
     category='standard',
     issuer=None,
-    sub_brand='none',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    sub_brand='none'
 )
 ```
 

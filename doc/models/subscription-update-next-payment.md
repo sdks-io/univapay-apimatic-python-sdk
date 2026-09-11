@@ -21,19 +21,8 @@ Fields that can be updated on the next scheduled payment.
 ## Example
 
 ```python
-import dateutil.parser
-import jsonpickle
-
-from univapayclientsdk.models.subscription_terminate_with_status import SubscriptionTerminateWithStatus
 from univapayclientsdk.models.subscription_update_next_payment import SubscriptionUpdateNextPayment
 
-subscription_update_next_payment = SubscriptionUpdateNextPayment(
-    due_date=dateutil.parser.parse('2016-03-13').date(),
-    amount=32,
-    terminate_with_status=SubscriptionTerminateWithStatus.SUSPENDED,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_update_next_payment = SubscriptionUpdateNextPayment()
 ```
 

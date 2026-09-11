@@ -9,11 +9,20 @@ from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.generic_metadata import (
     GenericMetadata,
 )
+from univapayclientsdk.models.subscription_installment_plan_response import (
+    SubscriptionInstallmentPlanResponse,
+)
 from univapayclientsdk.models.subscription_next_payment import (
     SubscriptionNextPayment,
 )
+from univapayclientsdk.models.subscription_plan_settings import (
+    SubscriptionPlanSettings,
+)
 from univapayclientsdk.models.subscription_schedule_settings import (
     SubscriptionScheduleSettings,
+)
+from univapayclientsdk.models.subscription_three_ds import (
+    SubscriptionThreeDs,
 )
 
 
@@ -43,9 +52,30 @@ class Subscription(object):
         metadata (GenericMetadata): A free-form dictionary for custom metadata.
         mode (ChargeMode): Charge Mode schema.
         created_on (datetime): Timestamp when the resource was created.
+        three_ds (SubscriptionThreeDs): 3-D Secure configuration and redirect details
+            applied to the subscription's payments.
         period (SubscriptionPeriod): Subscription Period schema.
+        cyclical_period (str): ISO-8601 Duration for a custom billing frequency
+            (e.g., P3D, P1M), returned instead of `period` when the subscription uses
+            a custom cycle length rather than one of the fixed period presets.
+            Mutually exclusive with `period` — exactly one of the two is present.
         next_payment (SubscriptionNextPayment): Next scheduled payment details for a
             subscription.
+        cycles_left (int): Number of remaining billing cycles before the subscription
+            completes. Only present for cycle-limited plans (`subscription_plan` or
+            `installment_plan`); `null` for indefinite subscriptions.
+        subscription_plan (SubscriptionPlanSettings): Configuration for limited-cycle
+            subscriptions (Univapay side).
+        installment_plan (SubscriptionInstallmentPlanResponse): Installment plan
+            applied to the subscription, as returned by the API. Covers both
+            card-network installment plans (`revolving`, `fixed_cycles`) and legacy
+            fixed-amount installment plans (`fixed_cycle_amount`).
+        charge_id (uuid|str): Identifier of the charge associated with the
+            subscription's installment plan. Only present when `installment_plan` is
+            set.
+        amount_left (int): Remaining amount to be charged over the life of the plan,
+            in the smallest currency unit. Only present for cycle-limited plans.
+        amount_left_formatted (float): `amount_left` formatted for display.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.
 
@@ -70,8 +100,16 @@ class Subscription(object):
         "metadata": "metadata",
         "mode": "mode",
         "created_on": "created_on",
+        "three_ds": "three_ds",
         "period": "period",
+        "cyclical_period": "cyclical_period",
         "next_payment": "next_payment",
+        "cycles_left": "cycles_left",
+        "subscription_plan": "subscription_plan",
+        "installment_plan": "installment_plan",
+        "charge_id": "charge_id",
+        "amount_left": "amount_left",
+        "amount_left_formatted": "amount_left_formatted",
     }
 
     _optionals = [
@@ -92,8 +130,16 @@ class Subscription(object):
         "metadata",
         "mode",
         "created_on",
+        "three_ds",
         "period",
+        "cyclical_period",
         "next_payment",
+        "cycles_left",
+        "subscription_plan",
+        "installment_plan",
+        "charge_id",
+        "amount_left",
+        "amount_left_formatted",
     ]
 
     _nullables = [
@@ -101,6 +147,11 @@ class Subscription(object):
         "initial_amount_formatted",
         "subsequent_cycles_start",
         "first_charge_capture_after",
+        "cyclical_period",
+        "cycles_left",
+        "charge_id",
+        "amount_left",
+        "amount_left_formatted",
     ]
 
     def __init__(
@@ -122,8 +173,16 @@ class Subscription(object):
         metadata=APIHelper.SKIP,
         mode=APIHelper.SKIP,
         created_on=APIHelper.SKIP,
+        three_ds=APIHelper.SKIP,
         period=APIHelper.SKIP,
+        cyclical_period=APIHelper.SKIP,
         next_payment=APIHelper.SKIP,
+        cycles_left=APIHelper.SKIP,
+        subscription_plan=APIHelper.SKIP,
+        installment_plan=APIHelper.SKIP,
+        charge_id=APIHelper.SKIP,
+        amount_left=APIHelper.SKIP,
+        amount_left_formatted=APIHelper.SKIP,
         additional_properties=None):
         """Initialize a Subscription instance."""
         # Initialize members of the class
@@ -167,10 +226,26 @@ class Subscription(object):
                  APIHelper.apply_datetime_converter(
                 created_on, APIHelper.RFC3339DateTime)\
                  if created_on else None
+        if three_ds is not APIHelper.SKIP:
+            self.three_ds = three_ds
         if period is not APIHelper.SKIP:
             self.period = period
+        if cyclical_period is not APIHelper.SKIP:
+            self.cyclical_period = cyclical_period
         if next_payment is not APIHelper.SKIP:
             self.next_payment = next_payment
+        if cycles_left is not APIHelper.SKIP:
+            self.cycles_left = cycles_left
+        if subscription_plan is not APIHelper.SKIP:
+            self.subscription_plan = subscription_plan
+        if installment_plan is not APIHelper.SKIP:
+            self.installment_plan = installment_plan
+        if charge_id is not APIHelper.SKIP:
+            self.charge_id = charge_id
+        if amount_left is not APIHelper.SKIP:
+            self.amount_left = amount_left
+        if amount_left_formatted is not APIHelper.SKIP:
+            self.amount_left_formatted = amount_left_formatted
 
         # Add additional model properties to the instance
         if additional_properties is None:
@@ -267,14 +342,49 @@ class Subscription(object):
         created_on = APIHelper.RFC3339DateTime.from_value(
             dictionary.get("created_on")).datetime\
             if dictionary.get("created_on") else APIHelper.SKIP
+        three_ds =\
+            SubscriptionThreeDs.from_dictionary(
+                dictionary.get("three_ds"))\
+                if "three_ds" in dictionary.keys()\
+                else APIHelper.SKIP
         period =\
             dictionary.get("period")\
             if dictionary.get("period")\
+                else APIHelper.SKIP
+        cyclical_period =\
+            dictionary.get("cyclical_period")\
+            if "cyclical_period" in dictionary.keys()\
                 else APIHelper.SKIP
         next_payment =\
             SubscriptionNextPayment.from_dictionary(
                 dictionary.get("next_payment"))\
                 if "next_payment" in dictionary.keys()\
+                else APIHelper.SKIP
+        cycles_left =\
+            dictionary.get("cycles_left")\
+            if "cycles_left" in dictionary.keys()\
+                else APIHelper.SKIP
+        subscription_plan =\
+            SubscriptionPlanSettings.from_dictionary(
+                dictionary.get("subscription_plan"))\
+                if "subscription_plan" in dictionary.keys()\
+                else APIHelper.SKIP
+        installment_plan =\
+            SubscriptionInstallmentPlanResponse.from_dictionary(
+                dictionary.get("installment_plan"))\
+                if "installment_plan" in dictionary.keys()\
+                else APIHelper.SKIP
+        charge_id =\
+            dictionary.get("charge_id")\
+            if "charge_id" in dictionary.keys()\
+                else APIHelper.SKIP
+        amount_left =\
+            dictionary.get("amount_left")\
+            if "amount_left" in dictionary.keys()\
+                else APIHelper.SKIP
+        amount_left_formatted =\
+            dictionary.get("amount_left_formatted")\
+            if "amount_left_formatted" in dictionary.keys()\
                 else APIHelper.SKIP
 
         additional_properties = APIHelper.get_additional_properties(
@@ -300,8 +410,16 @@ class Subscription(object):
                    metadata,
                    mode,
                    created_on,
+                   three_ds,
                    period,
+                   cyclical_period,
                    next_payment,
+                   cycles_left,
+                   subscription_plan,
+                   installment_plan,
+                   charge_id,
+                   amount_left,
+                   amount_left_formatted,
                    additional_properties)
 
     @classmethod
@@ -412,14 +530,54 @@ class Subscription(object):
             if hasattr(self, "created_on")
             else None
         )
+        _three_ds=(
+            self.three_ds
+            if hasattr(self, "three_ds")
+            else None
+        )
         _period=(
             self.period
             if hasattr(self, "period")
             else None
         )
+        _cyclical_period=(
+            self.cyclical_period
+            if hasattr(self, "cyclical_period")
+            else None
+        )
         _next_payment=(
             self.next_payment
             if hasattr(self, "next_payment")
+            else None
+        )
+        _cycles_left=(
+            self.cycles_left
+            if hasattr(self, "cycles_left")
+            else None
+        )
+        _subscription_plan=(
+            self.subscription_plan
+            if hasattr(self, "subscription_plan")
+            else None
+        )
+        _installment_plan=(
+            self.installment_plan
+            if hasattr(self, "installment_plan")
+            else None
+        )
+        _charge_id=(
+            self.charge_id
+            if hasattr(self, "charge_id")
+            else None
+        )
+        _amount_left=(
+            self.amount_left
+            if hasattr(self, "amount_left")
+            else None
+        )
+        _amount_left_formatted=(
+            self.amount_left_formatted
+            if hasattr(self, "amount_left_formatted")
             else None
         )
         _additional_properties=self.additional_properties
@@ -442,8 +600,16 @@ class Subscription(object):
             f"metadata={_metadata!r}, "
             f"mode={_mode!r}, "
             f"created_on={_created_on!r}, "
+            f"three_ds={_three_ds!r}, "
             f"period={_period!r}, "
+            f"cyclical_period={_cyclical_period!r}, "
             f"next_payment={_next_payment!r}, "
+            f"cycles_left={_cycles_left!r}, "
+            f"subscription_plan={_subscription_plan!r}, "
+            f"installment_plan={_installment_plan!r}, "
+            f"charge_id={_charge_id!r}, "
+            f"amount_left={_amount_left!r}, "
+            f"amount_left_formatted={_amount_left_formatted!r}, "
             f"additional_properties={_additional_properties!r}, "
             f")"
         )
@@ -535,14 +701,54 @@ class Subscription(object):
             if hasattr(self, "created_on")
             else None
         )
+        _three_ds=(
+            self.three_ds
+            if hasattr(self, "three_ds")
+            else None
+        )
         _period=(
             self.period
             if hasattr(self, "period")
             else None
         )
+        _cyclical_period=(
+            self.cyclical_period
+            if hasattr(self, "cyclical_period")
+            else None
+        )
         _next_payment=(
             self.next_payment
             if hasattr(self, "next_payment")
+            else None
+        )
+        _cycles_left=(
+            self.cycles_left
+            if hasattr(self, "cycles_left")
+            else None
+        )
+        _subscription_plan=(
+            self.subscription_plan
+            if hasattr(self, "subscription_plan")
+            else None
+        )
+        _installment_plan=(
+            self.installment_plan
+            if hasattr(self, "installment_plan")
+            else None
+        )
+        _charge_id=(
+            self.charge_id
+            if hasattr(self, "charge_id")
+            else None
+        )
+        _amount_left=(
+            self.amount_left
+            if hasattr(self, "amount_left")
+            else None
+        )
+        _amount_left_formatted=(
+            self.amount_left_formatted
+            if hasattr(self, "amount_left_formatted")
             else None
         )
         _additional_properties=self.additional_properties
@@ -565,8 +771,16 @@ class Subscription(object):
             f"metadata={_metadata!s}, "
             f"mode={_mode!s}, "
             f"created_on={_created_on!s}, "
+            f"three_ds={_three_ds!s}, "
             f"period={_period!s}, "
+            f"cyclical_period={_cyclical_period!s}, "
             f"next_payment={_next_payment!s}, "
+            f"cycles_left={_cycles_left!s}, "
+            f"subscription_plan={_subscription_plan!s}, "
+            f"installment_plan={_installment_plan!s}, "
+            f"charge_id={_charge_id!s}, "
+            f"amount_left={_amount_left!s}, "
+            f"amount_left_formatted={_amount_left_formatted!s}, "
             f"additional_properties={_additional_properties!s}, "
             f")"
         )

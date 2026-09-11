@@ -22,22 +22,11 @@ Nested customs-processing error entry returned in `others`.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.customs_declaration_webhook_other_error import CustomsDeclarationWebhookOtherError
 
 customs_declaration_webhook_other_error = CustomsDeclarationWebhookOtherError(
     mtype='related_item',
-    credentials_id='00001b7c-0000-0000-0000-000000000000',
-    message=[
-        'message4',
-        'message5',
-        'message6'
-    ],
-    item_name='charge',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    item_name='charge'
 )
 ```
 

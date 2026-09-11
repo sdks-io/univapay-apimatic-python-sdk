@@ -44,8 +44,22 @@ refund_list = RefundList(
             amount_formatted=1000,
             reason=RefundReasonResponse.CUSTOMER_REQUEST,
             message='Customer returned item',
-            error=PaymentError(),
-            metadata=GenericMetadata(),
+            error=PaymentError(
+                code=24,
+                message='message4',
+                detail='detail0',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
+            metadata=GenericMetadata(
+                order_id='order_id0',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
+            ),
             mode=ChargeMode.LIVE,
             created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z'),
             updated_on=dateutil.parser.parse('2026-04-09T07:36:00.000000Z'),
@@ -63,9 +77,21 @@ refund_list = RefundList(
             amount_formatted=2500,
             reason=RefundReasonResponse.DUPLICATE,
             message='Duplicate charge',
-            error=PaymentError(),
+            error=PaymentError(
+                code=24,
+                message='message4',
+                detail='detail0',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
             metadata=GenericMetadata(
-                order_id='ORD-1002'
+                order_id='ORD-1002',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
             ),
             mode=ChargeMode.LIVE,
             created_on=dateutil.parser.parse('2026-04-10T10:00:00.000000Z'),

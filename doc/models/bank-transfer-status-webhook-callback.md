@@ -23,7 +23,6 @@ Webhook envelope whose `data` payload is a BankTransferStatusData resource.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.bank_transfer_event import BankTransferEvent
 from univapayclientsdk.models.bank_transfer_payment_status import BankTransferPaymentStatus
@@ -51,14 +50,8 @@ bank_transfer_status_webhook_callback = BankTransferStatusWebhookCallback(
         ),
         charge_metadata=GenericMetadata(
             order_id='order_12345'
-        ),
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        )
+    )
 )
 ```
 

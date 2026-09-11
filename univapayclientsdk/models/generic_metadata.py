@@ -19,8 +19,11 @@ class GenericMetadata(object):
             it (e.g., konbini, bank transfer).
         univapay_phone_number (str): Consumer phone number passed to payment
             processors that require it.
-        additional_properties (Dict[str, str | float | bool]): Allowed values for
-            metadata properties.
+        additional_properties (Dict[str, str | None | int | float | bool | List[str |
+            bool]]): Allowed values for metadata properties. Values may be a string,
+            number, boolean, null, or an array of any of the above — but not a nested
+            object; the server rejects metadata whose direct property values are JSON
+            objects.
 
     """
 

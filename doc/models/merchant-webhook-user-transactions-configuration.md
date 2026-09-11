@@ -36,22 +36,15 @@ Merchant transaction notification settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_user_transactions_configuration import MerchantWebhookUserTransactionsConfiguration
 
 merchant_webhook_user_transactions_configuration = MerchantWebhookUserTransactionsConfiguration(
     enabled=True,
     notify_customer=True,
     notify_on_test=False,
-    notify_on_recurring_token_creation=False,
-    notify_on_recurring_token_cvv_failed=False,
     notify_on_webhook_failure=True,
     notify_on_webhook_disabled=True,
-    notify_on_subscriptions=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    notify_on_subscriptions=True
 )
 ```
 

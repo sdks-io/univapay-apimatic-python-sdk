@@ -19,15 +19,8 @@ Charge Create Request Redirect schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.charge_create_request_redirect import ChargeCreateRequestRedirect
 
-charge_create_request_redirect = ChargeCreateRequestRedirect(
-    endpoint='endpoint6',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+charge_create_request_redirect = ChargeCreateRequestRedirect()
 ```
 

@@ -55,10 +55,18 @@ refund = Refund(
     error=PaymentError(
         code=301,
         message='Card number error.',
-        detail='The provided card number failed validation.'
+        detail='The provided card number failed validation.',
+        additional_properties={
+            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+        }
     ),
     metadata=GenericMetadata(
-        order_id='12345'
+        order_id='12345',
+        univapay_name='univapay-name8',
+        univapay_phone_number='univapay-phone-number2',
+        additional_properties={
+            'exampleAdditionalProperty': 'String4'
+        }
     ),
     mode=ChargeMode.LIVE,
     created_on=dateutil.parser.parse('2026-04-09T07:35:50Z'),

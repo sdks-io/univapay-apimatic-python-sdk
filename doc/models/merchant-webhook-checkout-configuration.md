@@ -20,27 +20,16 @@ Checkout field collection settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_checkout_configuration import MerchantWebhookCheckoutConfiguration
 from univapayclientsdk.models.merchant_webhook_checkout_toggle import MerchantWebhookCheckoutToggle
 
 merchant_webhook_checkout_configuration = MerchantWebhookCheckoutConfiguration(
     ec_email=MerchantWebhookCheckoutToggle(
-        enabled=True,
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        enabled=True
     ),
     ec_products=MerchantWebhookCheckoutToggle(
-        enabled=True,
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        enabled=True
+    )
 )
 ```
 

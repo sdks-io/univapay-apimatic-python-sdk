@@ -20,16 +20,11 @@ Structured detail entry describing a single API validation or business error.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.api_error_detail import ApiErrorDetail
 
 api_error_detail = ApiErrorDetail(
     field='card_number',
-    reason='INVALID_CARD_NUMBER',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    reason='INVALID_CARD_NUMBER'
 )
 ```
 

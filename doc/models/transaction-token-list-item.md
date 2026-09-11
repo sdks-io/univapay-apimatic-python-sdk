@@ -31,7 +31,6 @@ Transaction token entry returned in list responses.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.transaction_token_list_item import TransactionTokenListItem
 from univapayclientsdk.models.transaction_token_list_item_user_data import TransactionTokenListItemUserData
@@ -52,10 +51,7 @@ transaction_token_list_item = TransactionTokenListItem(
         cardholder_name='TARO YAMADA',
         email='user@example.com',
         brand='visa'
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    )
 )
 ```
 

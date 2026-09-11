@@ -23,7 +23,7 @@ class Store(object):
         name (str): Store display name.
         created_on (datetime): Timestamp when the store was created.
         configuration (MerchantWebhookConfiguration): Store-scoped configuration
-            snapshot serialized by gyron-payments-api. It uses the same flattened
+            snapshot as serialized by the backend. It uses the same flattened
             serializer as merchant configuration, but omits `transfer_schedule`.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.

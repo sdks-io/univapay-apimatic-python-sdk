@@ -20,7 +20,6 @@ Bank-transfer-specific webhook payload extension.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.bank_transfer_payment_status import BankTransferPaymentStatus
 from univapayclientsdk.models.bank_transfer_status_data import BankTransferStatusData
@@ -44,14 +43,8 @@ bank_transfer_status_webhook_callback_extension = BankTransferStatusWebhookCallb
         ),
         charge_metadata=GenericMetadata(
             order_id='order_12345'
-        ),
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        )
+    )
 )
 ```
 

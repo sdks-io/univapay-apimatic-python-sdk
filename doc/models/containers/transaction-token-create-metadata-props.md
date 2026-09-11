@@ -1,19 +1,21 @@
 
 # Transaction Token Create Metadata Props
 
-Transaction Token Create Metadata Props schema.
+Alias of GenericMetadataValue, retained because this schema name is part of the published SDK surface. Do not narrow it — see GenericMetadataValue for the contract.
 
 ## Data Type
 
-`str | bool | float`
+`str | None | int | float | bool | List[str | bool]`
 
 ## Cases
 
 | Type |
 |  --- |
 | `str` |
-| `bool` |
+| `int` |
 | `float` |
+| `bool` |
+| [`List[Any]`](../../../doc/models/containers/generic-metadata-array-item.md) |
 
 ## str
 
@@ -23,6 +25,26 @@ Transaction Token Create Metadata Props schema.
 
 ```python
 value = 'sale'
+```
+
+## int
+
+### Initialization Code
+
+#### Example
+
+```python
+value = 10
+```
+
+## float
+
+### Initialization Code
+
+#### Example
+
+```python
+value = 10.5
 ```
 
 ## bool
@@ -35,13 +57,16 @@ value = 'sale'
 value = True
 ```
 
-## float
+## List[Any]
 
 ### Initialization Code
 
 #### Example
 
 ```python
-value = 10
+value = [
+    'sale',
+    'promo'
+]
 ```
 

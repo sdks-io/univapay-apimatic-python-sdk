@@ -23,21 +23,8 @@ Schedule settings applied to a subscription.
 ## Example
 
 ```python
-import dateutil.parser
-import jsonpickle
-
 from univapayclientsdk.models.subscription_schedule_settings import SubscriptionScheduleSettings
-from univapayclientsdk.models.subscription_termination_mode import SubscriptionTerminationMode
 
-subscription_schedule_settings = SubscriptionScheduleSettings(
-    start_on=dateutil.parser.parse('2016-03-13').date(),
-    zone_id='zone_id2',
-    preserve_end_of_month=False,
-    retry_interval='retry_interval6',
-    termination_mode=SubscriptionTerminationMode.IMMEDIATE,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_schedule_settings = SubscriptionScheduleSettings()
 ```
 

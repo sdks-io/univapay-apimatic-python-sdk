@@ -16,12 +16,14 @@ Transaction Token Payment Type schema.
 | `ONLINE` |
 | `KONBINI` |
 | `BANK_TRANSFER` |
+| `QR_SCAN` |
+| `QR_MERCHANT` |
 
 ## Example
 
 ```python
 from univapayclientsdk.models.transaction_token_payment_type import TransactionTokenPaymentType
 
-transaction_token_payment_type = TransactionTokenPaymentType.KONBINI
+transaction_token_payment_type = TransactionTokenPaymentType.BANK_TRANSFER
 ```
 

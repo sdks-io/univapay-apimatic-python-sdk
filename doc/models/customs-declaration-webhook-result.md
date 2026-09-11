@@ -22,18 +22,13 @@ Result payload returned by the customs declaration formatter.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.customs_declaration_webhook_result import CustomsDeclarationWebhookResult
 
 customs_declaration_webhook_result = CustomsDeclarationWebhookResult(
     approving_authority='TOKYO',
     trade_id='wx_trade_12345',
     transaction_id='wx_txn_12345',
-    charge_transaction_id='wx_charge_12345',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    charge_transaction_id='wx_charge_12345'
 )
 ```
 

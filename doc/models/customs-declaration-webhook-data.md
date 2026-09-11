@@ -32,7 +32,6 @@ Customs declaration payload delivered in `customs_declaration_finished` webhooks
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.customs_declaration_webhook_data import CustomsDeclarationWebhookData
 from univapayclientsdk.models.customs_declaration_webhook_declaration import CustomsDeclarationWebhookDeclaration
@@ -44,7 +43,6 @@ customs_declaration_webhook_data = CustomsDeclarationWebhookData(
     charge_id='11ef0000-0000-4000-8000-000000000001',
     merchant_id='11ef0000-0000-4000-8000-000000000020',
     store_id='11ef0000-0000-4000-8000-000000000022',
-    platform_id='00001610-0000-0000-0000-000000000000',
     mode='test',
     gateway='wechat_online',
     declaration=CustomsDeclarationWebhookDeclaration(
@@ -61,10 +59,7 @@ customs_declaration_webhook_data = CustomsDeclarationWebhookData(
     ),
     status=CustomsDeclarationWebhookStatus.SUCCESSFUL,
     error=None,
-    created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z'),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z')
 )
 ```
 

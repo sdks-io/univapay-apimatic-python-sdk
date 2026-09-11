@@ -21,6 +21,12 @@ from univapayclientsdk.apis.cancels_api import (
 from univapayclientsdk.apis.charges_api import (
     ChargesApi,
 )
+from univapayclientsdk.apis.checkout_api import (
+    CheckoutApi,
+)
+from univapayclientsdk.apis.direct_debit_api import (
+    DirectDebitApi,
+)
 from univapayclientsdk.apis.merchants_api import (
     MerchantsApi,
 )
@@ -32,6 +38,9 @@ from univapayclientsdk.apis.stores_api import (
 )
 from univapayclientsdk.apis.subscriptions_api import (
     SubscriptionsApi,
+)
+from univapayclientsdk.apis.transaction_history_api import (
+    TransactionHistoryApi,
 )
 from univapayclientsdk.apis.transaction_tokens_api import (
     TransactionTokensApi,
@@ -91,13 +100,29 @@ class UnivapayClientSdkClient(object):
         """Provide access to the WebhooksApi endpoints."""
         return WebhooksApi(self.global_configuration)
 
-    def __init__(self, http_client_instance=None,
-                 override_http_client_configuration=False, http_call_back=None,
-                 timeout=30, max_retries=0, backoff_factor=2,
-                 retry_statuses=None, retry_methods=None, proxy_settings=None,
-                 logging_configuration=None, environment=Environment.PRODUCTION,
-                 base_url="https://api.univapay.com",
-                 bearer_auth_credentials=None, config=None):
+    @LazyProperty
+    def direct_debit(self):
+        """Provide access to the DirectDebitApi endpoints."""
+        return DirectDebitApi(self.global_configuration)
+
+    @LazyProperty
+    def checkout(self):
+        """Provide access to the CheckoutApi endpoints."""
+        return CheckoutApi(self.global_configuration)
+
+    @LazyProperty
+    def transaction_history(self):
+        """Provide access to the TransactionHistoryApi endpoints."""
+        return TransactionHistoryApi(self.global_configuration)
+
+    def __init__(
+        self, http_client_instance=None,
+        override_http_client_configuration=False, http_call_back=None,
+        timeout=30, max_retries=0, backoff_factor=2, retry_statuses=None,
+        retry_methods=None, proxy_settings=None, logging_configuration=None,
+        environment=Environment.PRODUCTION, base_url="https://api.gyro-n.money",
+        direct_debit_base_url="https://staging-direct-debit.gopay-services.com",
+        bearer_auth_credentials=None, config=None):
         """Initialize a new instance of UnivapayClientSdkClient."""
         self.config = config or Configuration(
             http_client_instance=http_client_instance,
@@ -108,6 +133,7 @@ class UnivapayClientSdkClient(object):
             proxy_settings=proxy_settings,
             logging_configuration=logging_configuration,
             environment=environment, base_url=base_url,
+            direct_debit_base_url=direct_debit_base_url,
             bearer_auth_credentials=bearer_auth_credentials)
 
         self.global_configuration = GlobalConfiguration(self.config)\

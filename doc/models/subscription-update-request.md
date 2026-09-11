@@ -15,6 +15,11 @@ Request payload for updating a subscription.
 |  --- | --- | --- | --- |
 | `transaction_token_id` | `uuid\|str` | Optional | Transaction token ID used for the subscription.  Can be changed to update the payment method (e.g., when a card expires).  Allowed only when the status is `unconfirmed`, `unpaid`, `current`, or `suspended`. |
 | `amount` | `int` | Optional | The recurring charge amount (applied to the cycle after the next one).  Not available for limited-cycle subscriptions.  To change the immediate next payment amount, update `next_payment.amount` instead. |
+| `period` | [`SubscriptionPeriod`](../../doc/models/subscription-period.md) | Optional | Subscription Period schema. |
+| `cyclical_period` | `str` | Optional | ISO-8601 Duration for custom frequency (e.g., P3D, P2M). Cannot be used together with `period`. Only allowed before the subscription's first payment has been paid. |
+| `initial_amount` | `int` | Optional | Different amount for the first charge. Only allowed while the subscription status is still editable (before it has started) and requires the App Token Secret. |
+| `subscription_plan` | [`SubscriptionPlanSettings`](../../doc/models/subscription-plan-settings.md) | Optional | Configuration for limited-cycle subscriptions (Univapay side). |
+| `installment_plan` | [`SubscriptionInstallmentPlan`](../../doc/models/subscription-installment-plan.md) | Optional | Configuration for credit card company side installments. |
 | `metadata` | [`GenericMetadata`](../../doc/models/generic-metadata.md) | Optional | A free-form dictionary for custom metadata. |
 | `status` | [`SubscriptionUpdateStatus`](../../doc/models/subscription-update-status.md) | Optional | Update the subscription status.  `suspended`: Pause the subscription.  `unpaid`: Resume a suspended subscription. |
 | `schedule_settings` | [`SubscriptionUpdateScheduleSettings`](../../doc/models/subscription-update-schedule-settings.md) | Optional | Schedule settings that can be updated on a subscription. |
@@ -25,41 +30,24 @@ Request payload for updating a subscription.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.generic_metadata import GenericMetadata
 from univapayclientsdk.models.subscription_termination_mode import SubscriptionTerminationMode
 from univapayclientsdk.models.subscription_update_next_payment import SubscriptionUpdateNextPayment
 from univapayclientsdk.models.subscription_update_request import SubscriptionUpdateRequest
 from univapayclientsdk.models.subscription_update_schedule_settings import SubscriptionUpdateScheduleSettings
-from univapayclientsdk.models.subscription_update_status import SubscriptionUpdateStatus
 
 subscription_update_request = SubscriptionUpdateRequest(
     transaction_token_id='11ef3362-3700-c54a-9baa-6f7e6527c9d9',
-    amount=34,
     metadata=GenericMetadata(
-        order_id='12345',
-        univapay_name='univapay-name8',
-        univapay_phone_number='univapay-phone-number2',
-        additional_properties={
-            'exampleAdditionalProperty': 'String4'
-        }
+        order_id='12345'
     ),
-    status=SubscriptionUpdateStatus.SUSPENDED,
     schedule_settings=SubscriptionUpdateScheduleSettings(
-        termination_mode=SubscriptionTerminationMode.ON_NEXT_PAYMENT,
-        start_on=dateutil.parser.parse('2016-03-13T12:52:32.123Z'),
-        retry_interval='retry_interval2',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        termination_mode=SubscriptionTerminationMode.ON_NEXT_PAYMENT
     ),
     next_payment=SubscriptionUpdateNextPayment(
         due_date=dateutil.parser.parse('2030-01-01').date()
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    )
 )
 ```
 

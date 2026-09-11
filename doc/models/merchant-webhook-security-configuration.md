@@ -29,8 +29,6 @@ Merchant-level fraud and refund safety settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_limit_refund_by_sales_configuration import MerchantWebhookLimitRefundBySalesConfiguration
 from univapayclientsdk.models.merchant_webhook_security_configuration import MerchantWebhookSecurityConfiguration
 from univapayclientsdk.models.restrict_ip_after_failed_charge_config import RestrictIpAfterFailedChargeConfig
@@ -38,15 +36,10 @@ from univapayclientsdk.models.restrict_ip_after_failed_charge_config import Rest
 merchant_webhook_security_configuration = MerchantWebhookSecurityConfiguration(
     card_charge_cooldown='PT5M',
     subscription_cooldown='PT10M',
-    idempotent_card_charge_cooldown='idempotent_card_charge_cooldown6',
-    idempotent_subscription_cooldown='idempotent_subscription_cooldown0',
     restrict_ip_after_failed_charge=RestrictIpAfterFailedChargeConfig(
         enabled=True,
         count=5,
-        cooldown='PT1H',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        cooldown='PT1H'
     ),
     refund_percent_limit=100,
     confirmation_required=False,
@@ -55,10 +48,7 @@ merchant_webhook_security_configuration = MerchantWebhookSecurityConfiguration(
         enabled=True,
         period='monthly',
         rolling_window=True
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    )
 )
 ```
 

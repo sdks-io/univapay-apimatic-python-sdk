@@ -27,7 +27,7 @@ class Merchant(object):
         finance_notification_email (str): Merchant finance notification email address.
         verified (bool): Whether the merchant has completed verification.
         configuration (MerchantWebhookConfiguration): Merchant configuration snapshot
-            serialized by gyron-payments-api.
+            as serialized by the backend.
         created_on (datetime): Timestamp when the merchant was created.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.

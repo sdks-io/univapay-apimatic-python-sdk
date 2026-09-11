@@ -22,18 +22,8 @@ A dictionary containing necessary key-value pairs for sending the request.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.issuer_token_payload import IssuerTokenPayload
 
-issuer_token_payload = IssuerTokenPayload(
-    request_data='request_data0',
-    s_spcd='sSpcd0',
-    s_cptok='sCptok6',
-    s_terkn='sTerkn0',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+issuer_token_payload = IssuerTokenPayload()
 ```
 

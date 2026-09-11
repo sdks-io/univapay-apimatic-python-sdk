@@ -16,10 +16,14 @@ class TransactionTokenCreateRequestPaymentType(object):
         ONLINE: The enum member of type str.
         KONBINI: The enum member of type str.
         BANK_TRANSFER: The enum member of type str.
+        QR_SCAN: The enum member of type str.
+        QR_MERCHANT: The enum member of type str.
+        PAIDY: The enum member of type str.
 
     """
 
-    _all_values = ["card", "online", "konbini", "bank_transfer"]
+    _all_values = ["card", "online", "konbini", "bank_transfer", "qr_scan", "qr_merchant",
+        "paidy"]
     CARD = "card"
 
     ONLINE = "online"
@@ -27,6 +31,12 @@ class TransactionTokenCreateRequestPaymentType(object):
     KONBINI = "konbini"
 
     BANK_TRANSFER = "bank_transfer"
+
+    QR_SCAN = "qr_scan"
+
+    QR_MERCHANT = "qr_merchant"
+
+    PAIDY = "paidy"
 
     @classmethod
     def validate(cls, value):

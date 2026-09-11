@@ -46,7 +46,12 @@ cancel_list = CancelList(
                 }
             ),
             metadata=GenericMetadata(
-                order_id='ORD-987'
+                order_id='ORD-987',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
             ),
             mode=ChargeMode.LIVE,
             created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z'),
@@ -69,7 +74,12 @@ cancel_list = CancelList(
                 }
             ),
             metadata=GenericMetadata(
-                order_id='ORD-988'
+                order_id='ORD-988',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
             ),
             mode=ChargeMode.LIVE,
             created_on=dateutil.parser.parse('2026-04-10T10:00:00.000000Z'),

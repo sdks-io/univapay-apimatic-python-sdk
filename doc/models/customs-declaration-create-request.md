@@ -22,18 +22,13 @@ Request body for creating a customs declaration. Backend currently accepts this 
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.customs_declaration_create_request import CustomsDeclarationCreateRequest
 
 customs_declaration_create_request = CustomsDeclarationCreateRequest(
     customs='TOKYO',
     merchant_customs_no='1234567890',
     certificate_id='AB1234567',
-    certificate_name='TARO YAMADA',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    certificate_name='TARO YAMADA'
 )
 ```
 

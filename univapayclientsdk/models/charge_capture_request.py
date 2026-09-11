@@ -11,13 +11,16 @@ from univapayclientsdk.api_helper import APIHelper
 class ChargeCaptureRequest(object):
     """Implementation of the 'ChargeCaptureRequest' model.
 
-    Request payload for capturing an authorized charge.
+    Request payload for capturing an authorized charge. Both fields are optional;
+    omit the entire body to capture the full outstanding amount.
 
     Attributes:
         amount (int): The amount to capture. Must be less than or equal to the
-            authorized amount.
+            authorized amount. If omitted, the full outstanding authorized amount is
+            captured.
         currency (str): ISO-4217 currency code. Must exactly match the currency used
-            during authorization.
+            during authorization. If omitted, defaults to the currency originally
+            requested on the charge.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.
 
@@ -29,15 +32,22 @@ class ChargeCaptureRequest(object):
         "currency": "currency",
     }
 
+    _optionals = [
+        "amount",
+        "currency",
+    ]
+
     def __init__(
         self,
-        amount=None,
-        currency=None,
+        amount=APIHelper.SKIP,
+        currency=APIHelper.SKIP,
         additional_properties=None):
         """Initialize a ChargeCaptureRequest instance."""
         # Initialize members of the class
-        self.amount = amount
-        self.currency = currency
+        if amount is not APIHelper.SKIP:
+            self.amount = amount
+        if currency is not APIHelper.SKIP:
+            self.currency = currency
 
         # Add additional model properties to the instance
         if additional_properties is None:
@@ -65,11 +75,11 @@ class ChargeCaptureRequest(object):
         amount =\
             dictionary.get("amount")\
             if dictionary.get("amount")\
-                else None
+                else APIHelper.SKIP
         currency =\
             dictionary.get("currency")\
             if dictionary.get("currency")\
-                else None
+                else APIHelper.SKIP
 
         additional_properties = APIHelper.get_additional_properties(
             dictionary={k: v for k, v in dictionary.items()
@@ -83,8 +93,16 @@ class ChargeCaptureRequest(object):
 
     def __repr__(self):
         """Return a unambiguous string representation."""
-        _amount=self.amount
-        _currency=self.currency
+        _amount=(
+            self.amount
+            if hasattr(self, "amount")
+            else None
+        )
+        _currency=(
+            self.currency
+            if hasattr(self, "currency")
+            else None
+        )
         _additional_properties=self.additional_properties
         return (
             f"{self.__class__.__name__}("
@@ -96,8 +114,16 @@ class ChargeCaptureRequest(object):
 
     def __str__(self):
         """Return a human-readable string representation."""
-        _amount=self.amount
-        _currency=self.currency
+        _amount=(
+            self.amount
+            if hasattr(self, "amount")
+            else None
+        )
+        _currency=(
+            self.currency
+            if hasattr(self, "currency")
+            else None
+        )
         _additional_properties=self.additional_properties
         return (
             f"{self.__class__.__name__}("

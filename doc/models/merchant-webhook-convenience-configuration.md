@@ -20,16 +20,11 @@ Convenience-store payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_convenience_configuration import MerchantWebhookConvenienceConfiguration
 
 merchant_webhook_convenience_configuration = MerchantWebhookConvenienceConfiguration(
     enabled=True,
-    expiration='P3D',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    expiration='P3D'
 )
 ```
 

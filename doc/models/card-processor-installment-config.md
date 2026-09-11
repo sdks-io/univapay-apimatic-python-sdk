@@ -20,16 +20,11 @@ Card-processor capabilities available for installment payments.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.card_processor_installment_config import CardProcessorInstallmentConfig
 
 card_processor_installment_config = CardProcessorInstallmentConfig(
     revolving=True,
-    fixed_cycle=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    fixed_cycle=True
 )
 ```
 

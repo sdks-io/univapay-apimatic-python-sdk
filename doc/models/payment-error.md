@@ -22,17 +22,12 @@ The HTTP status will return success (2xx), but the resource `status` will be `fa
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.payment_error import PaymentError
 
 payment_error = PaymentError(
     code=301,
     message='Card number error.',
-    detail='The provided card number failed validation.',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    detail='The provided card number failed validation.'
 )
 ```
 

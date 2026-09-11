@@ -23,9 +23,6 @@ Request body for creating a refund against a successful charge. Konbini and bank
 ## Example
 
 ```python
-import jsonpickle
-
-from univapayclientsdk.models.generic_metadata import GenericMetadata
 from univapayclientsdk.models.refund_create_request import RefundCreateRequest
 from univapayclientsdk.models.refund_reason_request import RefundReasonRequest
 
@@ -33,11 +30,7 @@ refund_create_request = RefundCreateRequest(
     amount=1000,
     currency='JPY',
     reason=RefundReasonRequest.CUSTOMER_REQUEST,
-    message='Customer returned item',
-    metadata=GenericMetadata(),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    message='Customer returned item'
 )
 ```
 

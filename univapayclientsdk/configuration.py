@@ -28,7 +28,7 @@ from univapayclientsdk.logging.configuration.api_logging_configuration import (
 class Environment(Enum):
     """An enum for SDK environments."""
 
-    # Production Server
+    # Staging Server
     PRODUCTION = 0
 
     @classmethod
@@ -64,6 +64,7 @@ class Server(Enum):
     """An enum for API servers."""
 
     DEFAULT = 0
+    DIRECTDEBIT = 1
 
     @classmethod
     def from_value(cls, value, default=None):
@@ -108,16 +109,24 @@ class Configuration(HttpClientConfiguration):
         return self._base_url
 
     @property
+    def direct_debit_base_url(self):
+        """Return current direct_debit_base_url."""
+        return self._direct_debit_base_url
+
+    @property
     def bearer_auth_credentials(self):
         """Return BearerAuthCredentials."""
         return self._bearer_auth_credentials
 
-    def __init__(self, http_client_instance=None,
-                 override_http_client_configuration=False, http_call_back=None,
-                 timeout=30, max_retries=0, backoff_factor=2, retry_statuses=None,
-                 retry_methods=None, proxy_settings=None, logging_configuration=None,
-                 environment=Environment.PRODUCTION,
-                 base_url="https://api.univapay.com", bearer_auth_credentials=None):
+    def __init__(
+        self, http_client_instance=None,
+        override_http_client_configuration=False, http_call_back=None, timeout=30,
+        max_retries=0, backoff_factor=2, retry_statuses=None, retry_methods=None,
+        proxy_settings=None, logging_configuration=None,
+        environment=Environment.PRODUCTION, base_url="https://api.gyro-n.money",
+        direct_debit_base_url="https://staging-direct-debit.gopay-services.com",
+        bearer_auth_credentials=None,
+    ):
         """Initialize Configuration object."""
         if retry_methods is None:
             retry_methods = ["GET", "PUT"]
@@ -142,6 +151,9 @@ class Configuration(HttpClientConfiguration):
         # Base URL for the API
         self._base_url = base_url
 
+        # Base URL for the Direct Debit API
+        self._direct_debit_base_url = direct_debit_base_url
+
         self._bearer_auth_credentials = bearer_auth_credentials
 
         # The Http Client to use for making requests.
@@ -152,7 +164,7 @@ class Configuration(HttpClientConfiguration):
                    timeout=None, max_retries=None, backoff_factor=None,
                    retry_statuses=None, retry_methods=None, proxy_settings=None,
                    logging_configuration=None, environment=None, base_url=None,
-                   bearer_auth_credentials=None):
+                   direct_debit_base_url=None, bearer_auth_credentials=None):
         """Clone configuration with overrides."""
         http_client_instance = http_client_instance or self.http_client_instance
         override_http_client_configuration =\
@@ -168,6 +180,7 @@ class Configuration(HttpClientConfiguration):
         logging_configuration = logging_configuration or self.logging_configuration
         environment = environment or self.environment
         base_url = base_url or self.base_url
+        direct_debit_base_url = direct_debit_base_url or self.direct_debit_base_url
         bearer_auth_credentials =\
             (bearer_auth_credentials
             or self.bearer_auth_credentials)
@@ -178,7 +191,8 @@ class Configuration(HttpClientConfiguration):
             backoff_factor=backoff_factor, retry_statuses=retry_statuses,
             retry_methods=retry_methods, proxy_settings=proxy_settings,
             logging_configuration=logging_configuration, environment=environment,
-            base_url=base_url, bearer_auth_credentials=bearer_auth_credentials,
+            base_url=base_url, direct_debit_base_url=direct_debit_base_url,
+            bearer_auth_credentials=bearer_auth_credentials,
         )
 
     def create_http_client(self):
@@ -197,6 +211,7 @@ class Configuration(HttpClientConfiguration):
     environments = {
         Environment.PRODUCTION: {
             Server.DEFAULT: "{baseUrl}",
+            Server.DIRECTDEBIT: "{directDebitBaseUrl}",
         },
     }
 
@@ -213,6 +228,7 @@ class Configuration(HttpClientConfiguration):
         """
         parameters = {
             "baseUrl": {"value": self.base_url, "encode": False},
+            "directDebitBaseUrl": {"value": self.direct_debit_base_url, "encode": False},
         }
 
         return APIHelper.append_url_with_template_parameters(
@@ -248,7 +264,8 @@ class Configuration(HttpClientConfiguration):
             if methods else None
         environment = Environment.from_value(
             os.getenv("ENVIRONMENT"), Environment.PRODUCTION)
-        base_url = os.getenv("BASE_URL", "https://api.univapay.com")
+        base_url = os.getenv("BASE_URL", "https://api.gyro-n.money")
+        direct_debit_base_url = os.getenv("DIRECT_DEBIT_BASE_URL", "https://staging-direct-debit.gopay-services.com")
 
         from univapayclientsdk.http.auth.oauth_2 import (
             BearerAuthCredentials,
@@ -264,6 +281,7 @@ class Configuration(HttpClientConfiguration):
             retry_methods=retry_methods,
             environment=environment,
             base_url=base_url,
+            direct_debit_base_url=direct_debit_base_url,
             proxy_settings=ProxySettings.from_environment(),
             logging_configuration=LoggingConfiguration.from_environment(),
             bearer_auth_credentials=BearerAuthCredentials.from_environment(),

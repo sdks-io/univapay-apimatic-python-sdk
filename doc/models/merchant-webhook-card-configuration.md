@@ -35,22 +35,15 @@ Card payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_card_configuration import MerchantWebhookCardConfiguration
 
 merchant_webhook_card_configuration = MerchantWebhookCardConfiguration(
     enabled=True,
     debit_enabled=True,
     prepaid_enabled=False,
-    debit_authorization_enabled=False,
-    prepaid_authorization_enabled=False,
     foreign_cards_allowed=False,
     three_ds_required=True,
-    allow_direct_token_creation=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    allow_direct_token_creation=False
 )
 ```
 

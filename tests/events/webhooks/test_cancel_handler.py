@@ -11,7 +11,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from univapayclientsdk.api_helper import ApiHelper
+from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.events.unknown_event import (
     UnknownEvent,
 )

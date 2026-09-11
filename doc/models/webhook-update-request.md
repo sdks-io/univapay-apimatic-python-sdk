@@ -22,23 +22,10 @@ Request body for updating a webhook. All fields are optional. Omitted fields are
 ## Example
 
 ```python
-import jsonpickle
-
-from univapayclientsdk.models.webhook_trigger import WebhookTrigger
 from univapayclientsdk.models.webhook_update_request import WebhookUpdateRequest
 
 webhook_update_request = WebhookUpdateRequest(
-    triggers=[
-        WebhookTrigger.TOKEN_UPDATED,
-        WebhookTrigger.TOKEN_THREE_D_S_UPDATED,
-        WebhookTrigger.TOKEN_CVV_AUTH_UPDATED
-    ],
-    url='url4',
-    auth_token='auth_token6',
-    active=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    active=False
 )
 ```
 

@@ -21,8 +21,6 @@ Customer-management defaults.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_customer_management_configuration import MerchantWebhookCustomerManagementConfiguration
 
 merchant_webhook_customer_management_configuration = MerchantWebhookCustomerManagementConfiguration(
@@ -30,10 +28,7 @@ merchant_webhook_customer_management_configuration = MerchantWebhookCustomerMana
     default_roles=[
         'end_user'
     ],
-    default_mode='live',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    default_mode='live'
 )
 ```
 

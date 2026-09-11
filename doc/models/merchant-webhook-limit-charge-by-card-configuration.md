@@ -20,16 +20,11 @@ Per-card velocity limit configuration.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_limit_charge_by_card_configuration import MerchantWebhookLimitChargeByCardConfiguration
 
 merchant_webhook_limit_charge_by_card_configuration = MerchantWebhookLimitChargeByCardConfiguration(
     quantity_of_charges=5,
-    duration_window='PT24H',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    duration_window='PT24H'
 )
 ```
 

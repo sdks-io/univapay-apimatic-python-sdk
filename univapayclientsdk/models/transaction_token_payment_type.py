@@ -17,10 +17,11 @@ class TransactionTokenPaymentType(object):
         ONLINE: The enum member of type str.
         KONBINI: The enum member of type str.
         BANK_TRANSFER: The enum member of type str.
+        QR_SCAN: The enum member of type str.
+        QR_MERCHANT: The enum member of type str.
 
     """
 
-    _all_values = ["card", "paidy", "online", "konbini", "bank_transfer"]
     CARD = "card"
 
     PAIDY = "paidy"
@@ -31,18 +32,9 @@ class TransactionTokenPaymentType(object):
 
     BANK_TRANSFER = "bank_transfer"
 
-    @classmethod
-    def validate(cls, value):
-        """Validate value contains in enum
+    QR_SCAN = "qr_scan"
 
-        Args:
-            value: the value to be validated
-
-        Returns:
-            boolean : if value is valid enum values.
-
-        """
-        return value in cls._all_values
+    QR_MERCHANT = "qr_merchant"
 
     @classmethod
     def from_value(cls, value, default=None):

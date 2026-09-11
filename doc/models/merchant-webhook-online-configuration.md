@@ -19,15 +19,10 @@ Online payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_online_configuration import MerchantWebhookOnlineConfiguration
 
 merchant_webhook_online_configuration = MerchantWebhookOnlineConfiguration(
-    enabled=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    enabled=True
 )
 ```
 

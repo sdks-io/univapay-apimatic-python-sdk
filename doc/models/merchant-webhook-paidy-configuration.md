@@ -19,15 +19,10 @@ Paidy payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_paidy_configuration import MerchantWebhookPaidyConfiguration
 
 merchant_webhook_paidy_configuration = MerchantWebhookPaidyConfiguration(
-    enabled=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    enabled=False
 )
 ```
 

@@ -20,16 +20,11 @@ Monetary amount object serialized by backend config models.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_money_amount import MerchantWebhookMoneyAmount
 
 merchant_webhook_money_amount = MerchantWebhookMoneyAmount(
     amount=1000,
-    currency='JPY',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    currency='JPY'
 )
 ```
 

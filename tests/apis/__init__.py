@@ -4,10 +4,13 @@ __all__ = [
     "api_test_base",
     "test_cancels_api",
     "test_charges_api",
+    "test_checkout_api",
+    "test_direct_debit_api",
     "test_merchants_api",
     "test_refunds_api",
     "test_stores_api",
     "test_subscriptions_api",
+    "test_transaction_history_api",
     "test_transaction_tokens_api",
     "test_webhooks_api",
 ]

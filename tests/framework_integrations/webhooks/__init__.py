@@ -2,7 +2,7 @@
 # ruff: noqa: RUF022 | `__all__` is not sorted
 __all__ = [
     "apps",
-    "test_django_charge_updated_app",
-    "test_fastapi_charge_updated_app",
-    "test_flask_charge_updated_app",
+    "test_django_charge_app",
+    "test_fastapi_charge_app",
+    "test_flask_charge_app",
 ]

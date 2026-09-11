@@ -21,18 +21,8 @@ Configuration for limited-cycle subscriptions (Univapay side).
 ## Example
 
 ```python
-import jsonpickle
-
-from univapayclientsdk.models.plan_settings_type import PlanSettingsType
 from univapayclientsdk.models.subscription_plan_settings import SubscriptionPlanSettings
 
-subscription_plan_settings = SubscriptionPlanSettings(
-    plan_type=PlanSettingsType.FIXED_CYCLES,
-    fixed_cycles=212,
-    fixed_cycle_amount=22,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_plan_settings = SubscriptionPlanSettings()
 ```
 

@@ -632,22 +632,25 @@ class ChargesApi(BaseApi):
     def capture_charge(self,
                        store_id,
                        id,
-                       body,
-                       idempotency_key=None):
+                       idempotency_key=None,
+                       body=None):
         """Perform a POST request to /stores/{storeId}/charges/{id}/capture.
 
         Captures a previously authorized charge (where `capture` was set to false
         during creation).  The capture amount must be less than or equal to the
-        authorized amount, and the currency must match.
+        authorized amount, and the currency must match. The request body — and both
+        of its fields — is optional: if omitted entirely, the full outstanding
+        authorized amount (in the originally requested currency) is captured.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
             id (uuid|str): The unique identifier of the resource.
-            body (ChargeCaptureRequest): Request payload for capturing an authorized
-                charge.
             idempotency_key (str, optional): An optional idempotency key to prevent
                 double charges and duplicate operations. We recommend a randomly
                 generated UUID (v4).
+            body (ChargeCaptureRequest, optional): Optional request payload for
+                capturing an authorized charge. Omit entirely to capture the full
+                outstanding authorized amount.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
@@ -677,12 +680,11 @@ class ChargesApi(BaseApi):
             .header_param(Parameter()
                 .key("Content-Type")
                 .value("application/json"))
-            .body_param(Parameter()
-                .value(body)
-                .is_required(True))
             .header_param(Parameter()
                 .key("Idempotency-Key")
                 .value(idempotency_key))
+            .body_param(Parameter()
+                .value(body))
             .header_param(Parameter()
                 .key("accept")
                 .value("application/json"))
@@ -900,7 +902,12 @@ class ChargesApi(BaseApi):
         """Perform a GET request to
         /stores/{storeId}/charges/{id}/bank_transfer_ledgers.
 
-        Retrieves bank transfer ledger entries associated with a charge.
+        Retrieves bank transfer ledger entries associated with a charge. This is an
+        optional reconciliation endpoint — not part of the required
+        create-charge-and-poll flow.
+        **⚠️ Requires a merchant-level application token**, unlike the rest of the
+        bank transfer flow. A store application token (`Bearer {secret}.{jwt}` scoped
+        to a `store_id`) is not sufficient here, even though the path is store-scoped.
 
         Args:
             store_id (uuid|str): The unique identifier of the store.

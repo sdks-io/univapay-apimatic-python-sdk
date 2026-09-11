@@ -46,6 +46,9 @@ from univapayclientsdk.models.subscription_payment import (
 from univapayclientsdk.models.subscription_payment_list import (
     SubscriptionPaymentList,
 )
+from univapayclientsdk.models.subscription_simulation_payment import (
+    SubscriptionSimulationPayment,
+)
 
 
 class SubscriptionsApi(BaseApi):
@@ -133,6 +136,9 @@ class SubscriptionsApi(BaseApi):
         ).execute()
 
     def list_all_subscriptions(self,
+                               search=None,
+                               status=None,
+                               mode=None,
                                limit=10,
                                cursor=None,
                                cursor_direction="desc"):
@@ -141,6 +147,10 @@ class SubscriptionsApi(BaseApi):
         Lists all subscriptions across all stores.
 
         Args:
+            search (str, optional): Search by metadata values.
+            status (SubscriptionStatus, optional): Filter subscriptions by current
+                status.
+            mode (ChargeMode, optional): Filter subscriptions by processing mode.
             limit (int, optional): Maximum number of resources to return in one page.
             cursor (uuid|str, optional): Cursor pointing to the resource after which
                 pagination should continue.
@@ -161,6 +171,15 @@ class SubscriptionsApi(BaseApi):
             RequestBuilder().server(Server.DEFAULT)
             .path("/subscriptions")
             .http_method(HttpMethodEnum.GET)
+            .query_param(Parameter()
+                .key("search")
+                .value(search))
+            .query_param(Parameter()
+                .key("status")
+                .value(status))
+            .query_param(Parameter()
+                .key("mode")
+                .value(mode))
             .query_param(Parameter()
                 .key("limit")
                 .value(limit))
@@ -196,6 +215,88 @@ class SubscriptionsApi(BaseApi):
                 ApiException)
             .local_error_template("429",
                 "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def simulate_subscription_plan(self,
+                                   idempotency_key=None,
+                                   body=None):
+        """Perform a POST request to /subscriptions/simulate_plan.
+
+        Simulates the payment schedule that a subscription would follow, without
+        creating a live subscription or a transaction token. Returns a bare array of
+        the scheduled payments that would result from the given amount, currency,
+        period (or cyclical period), and plan settings.
+
+        Args:
+            idempotency_key (str, optional): An optional idempotency key to prevent
+                double charges and duplicate operations. We recommend a randomly
+                generated UUID (v4).
+            body (SubscriptionSimulationRequest, optional): Subscription Plan
+                Simulation request
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Simulated Subscription
+                Payment Schedule
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/subscriptions/simulate_plan")
+            .http_method(HttpMethodEnum.POST)
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .header_param(Parameter()
+                .key("Idempotency-Key")
+                .value(idempotency_key))
+            .body_param(Parameter()
+                .value(body))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(SubscriptionSimulationPayment.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",
@@ -299,6 +400,96 @@ class SubscriptionsApi(BaseApi):
                 ApiException)
             .local_error_template("429",
                 "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def simulate_store_subscription_plan(self,
+                                         store_id,
+                                         idempotency_key=None,
+                                         body=None):
+        """Perform a POST request to
+        /stores/{storeId}/subscriptions/simulate_plan.
+
+        Simulates the payment schedule that a subscription would follow for a
+        specific store, without creating a live subscription or a transaction token.
+        Returns a bare array of the scheduled payments that would result from the
+        given amount, currency, period (or cyclical period), and plan settings.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            idempotency_key (str, optional): An optional idempotency key to prevent
+                double charges and duplicate operations. We recommend a randomly
+                generated UUID (v4).
+            body (SubscriptionSimulationRequest, optional): Subscription Plan
+                Simulation request
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Simulated Subscription
+                Payment Schedule
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/subscriptions/simulate_plan")
+            .http_method(HttpMethodEnum.POST)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .header_param(Parameter()
+                .key("Idempotency-Key")
+                .value(idempotency_key))
+            .body_param(Parameter()
+                .value(body))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(SubscriptionSimulationPayment.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
                 ApiException)
             .local_error_template("500",
                 "HTTP 500 Server Error: {$response.body#/code}",

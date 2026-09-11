@@ -19,15 +19,10 @@ Charge Create Request Client Metadata schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.charge_create_request_client_metadata import ChargeCreateRequestClientMetadata
 
 charge_create_request_client_metadata = ChargeCreateRequestClientMetadata(
-    ip_address='198.51.100.14',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    ip_address='198.51.100.14'
 )
 ```
 

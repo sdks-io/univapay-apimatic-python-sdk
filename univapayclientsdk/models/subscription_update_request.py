@@ -9,6 +9,12 @@ from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.models.generic_metadata import (
     GenericMetadata,
 )
+from univapayclientsdk.models.subscription_installment_plan import (
+    SubscriptionInstallmentPlan,
+)
+from univapayclientsdk.models.subscription_plan_settings import (
+    SubscriptionPlanSettings,
+)
 from univapayclientsdk.models.subscription_update_next_payment import (
     SubscriptionUpdateNextPayment,
 )
@@ -30,6 +36,17 @@ class SubscriptionUpdateRequest(object):
         amount (int): The recurring charge amount (applied to the cycle after the
             next one).  Not available for limited-cycle subscriptions.  To change the
             immediate next payment amount, update `next_payment.amount` instead.
+        period (SubscriptionPeriod): Subscription Period schema.
+        cyclical_period (str): ISO-8601 Duration for custom frequency (e.g., P3D,
+            P2M). Cannot be used together with `period`. Only allowed before the
+            subscription's first payment has been paid.
+        initial_amount (int): Different amount for the first charge. Only allowed
+            while the subscription status is still editable (before it has started)
+            and requires the App Token Secret.
+        subscription_plan (SubscriptionPlanSettings): Configuration for limited-cycle
+            subscriptions (Univapay side).
+        installment_plan (SubscriptionInstallmentPlan): Configuration for credit card
+            company side installments.
         metadata (GenericMetadata): A free-form dictionary for custom metadata.
         status (SubscriptionUpdateStatus): Update the subscription status.
             `suspended`: Pause the subscription.  `unpaid`: Resume a suspended
@@ -47,6 +64,11 @@ class SubscriptionUpdateRequest(object):
     _names = {
         "transaction_token_id": "transaction_token_id",
         "amount": "amount",
+        "period": "period",
+        "cyclical_period": "cyclical_period",
+        "initial_amount": "initial_amount",
+        "subscription_plan": "subscription_plan",
+        "installment_plan": "installment_plan",
         "metadata": "metadata",
         "status": "status",
         "schedule_settings": "schedule_settings",
@@ -56,6 +78,11 @@ class SubscriptionUpdateRequest(object):
     _optionals = [
         "transaction_token_id",
         "amount",
+        "period",
+        "cyclical_period",
+        "initial_amount",
+        "subscription_plan",
+        "installment_plan",
         "metadata",
         "status",
         "schedule_settings",
@@ -66,6 +93,11 @@ class SubscriptionUpdateRequest(object):
         self,
         transaction_token_id=APIHelper.SKIP,
         amount=APIHelper.SKIP,
+        period=APIHelper.SKIP,
+        cyclical_period=APIHelper.SKIP,
+        initial_amount=APIHelper.SKIP,
+        subscription_plan=APIHelper.SKIP,
+        installment_plan=APIHelper.SKIP,
         metadata=APIHelper.SKIP,
         status=APIHelper.SKIP,
         schedule_settings=APIHelper.SKIP,
@@ -77,6 +109,16 @@ class SubscriptionUpdateRequest(object):
             self.transaction_token_id = transaction_token_id
         if amount is not APIHelper.SKIP:
             self.amount = amount
+        if period is not APIHelper.SKIP:
+            self.period = period
+        if cyclical_period is not APIHelper.SKIP:
+            self.cyclical_period = cyclical_period
+        if initial_amount is not APIHelper.SKIP:
+            self.initial_amount = initial_amount
+        if subscription_plan is not APIHelper.SKIP:
+            self.subscription_plan = subscription_plan
+        if installment_plan is not APIHelper.SKIP:
+            self.installment_plan = installment_plan
         if metadata is not APIHelper.SKIP:
             self.metadata = metadata
         if status is not APIHelper.SKIP:
@@ -117,6 +159,28 @@ class SubscriptionUpdateRequest(object):
             dictionary.get("amount")\
             if dictionary.get("amount")\
                 else APIHelper.SKIP
+        period =\
+            dictionary.get("period")\
+            if dictionary.get("period")\
+                else APIHelper.SKIP
+        cyclical_period =\
+            dictionary.get("cyclical_period")\
+            if dictionary.get("cyclical_period")\
+                else APIHelper.SKIP
+        initial_amount =\
+            dictionary.get("initial_amount")\
+            if dictionary.get("initial_amount")\
+                else APIHelper.SKIP
+        subscription_plan =\
+            SubscriptionPlanSettings.from_dictionary(
+                dictionary.get("subscription_plan"))\
+                if "subscription_plan" in dictionary.keys()\
+                else APIHelper.SKIP
+        installment_plan =\
+            SubscriptionInstallmentPlan.from_dictionary(
+                dictionary.get("installment_plan"))\
+                if "installment_plan" in dictionary.keys()\
+                else APIHelper.SKIP
         metadata =\
             GenericMetadata.from_dictionary(
                 dictionary.get("metadata"))\
@@ -145,6 +209,11 @@ class SubscriptionUpdateRequest(object):
         # Return an object of this model
         return cls(transaction_token_id,
                    amount,
+                   period,
+                   cyclical_period,
+                   initial_amount,
+                   subscription_plan,
+                   installment_plan,
                    metadata,
                    status,
                    schedule_settings,
@@ -161,6 +230,31 @@ class SubscriptionUpdateRequest(object):
         _amount=(
             self.amount
             if hasattr(self, "amount")
+            else None
+        )
+        _period=(
+            self.period
+            if hasattr(self, "period")
+            else None
+        )
+        _cyclical_period=(
+            self.cyclical_period
+            if hasattr(self, "cyclical_period")
+            else None
+        )
+        _initial_amount=(
+            self.initial_amount
+            if hasattr(self, "initial_amount")
+            else None
+        )
+        _subscription_plan=(
+            self.subscription_plan
+            if hasattr(self, "subscription_plan")
+            else None
+        )
+        _installment_plan=(
+            self.installment_plan
+            if hasattr(self, "installment_plan")
             else None
         )
         _metadata=(
@@ -188,6 +282,11 @@ class SubscriptionUpdateRequest(object):
             f"{self.__class__.__name__}("
             f"transaction_token_id={_transaction_token_id!r}, "
             f"amount={_amount!r}, "
+            f"period={_period!r}, "
+            f"cyclical_period={_cyclical_period!r}, "
+            f"initial_amount={_initial_amount!r}, "
+            f"subscription_plan={_subscription_plan!r}, "
+            f"installment_plan={_installment_plan!r}, "
             f"metadata={_metadata!r}, "
             f"status={_status!r}, "
             f"schedule_settings={_schedule_settings!r}, "
@@ -206,6 +305,31 @@ class SubscriptionUpdateRequest(object):
         _amount=(
             self.amount
             if hasattr(self, "amount")
+            else None
+        )
+        _period=(
+            self.period
+            if hasattr(self, "period")
+            else None
+        )
+        _cyclical_period=(
+            self.cyclical_period
+            if hasattr(self, "cyclical_period")
+            else None
+        )
+        _initial_amount=(
+            self.initial_amount
+            if hasattr(self, "initial_amount")
+            else None
+        )
+        _subscription_plan=(
+            self.subscription_plan
+            if hasattr(self, "subscription_plan")
+            else None
+        )
+        _installment_plan=(
+            self.installment_plan
+            if hasattr(self, "installment_plan")
             else None
         )
         _metadata=(
@@ -233,6 +357,11 @@ class SubscriptionUpdateRequest(object):
             f"{self.__class__.__name__}("
             f"transaction_token_id={_transaction_token_id!s}, "
             f"amount={_amount!s}, "
+            f"period={_period!s}, "
+            f"cyclical_period={_cyclical_period!s}, "
+            f"initial_amount={_initial_amount!s}, "
+            f"subscription_plan={_subscription_plan!s}, "
+            f"installment_plan={_installment_plan!s}, "
             f"metadata={_metadata!s}, "
             f"status={_status!s}, "
             f"schedule_settings={_schedule_settings!s}, "

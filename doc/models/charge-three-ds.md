@@ -20,16 +20,8 @@ Charge Three Ds schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.charge_three_ds import ChargeThreeDs
 
-charge_three_ds = ChargeThreeDs(
-    redirect_endpoint='redirect_endpoint4',
-    mode='mode8',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+charge_three_ds = ChargeThreeDs()
 ```
 

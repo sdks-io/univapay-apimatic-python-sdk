@@ -19,22 +19,14 @@ Request body for suspending a subscription. The `schedule_settings.termination_m
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.subscription_suspend_request import SubscriptionSuspendRequest
 from univapayclientsdk.models.subscription_termination_mode import SubscriptionTerminationMode
 from univapayclientsdk.models.suspend_schedule_settings import SuspendScheduleSettings
 
 subscription_suspend_request = SubscriptionSuspendRequest(
     schedule_settings=SuspendScheduleSettings(
-        termination_mode=SubscriptionTerminationMode.ON_NEXT_PAYMENT,
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        termination_mode=SubscriptionTerminationMode.ON_NEXT_PAYMENT
+    )
 )
 ```
 

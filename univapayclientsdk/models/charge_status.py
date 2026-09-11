@@ -22,8 +22,8 @@ class ChargeStatus(object):
 
     """
 
-    _all_values = ["pending", "awaiting", "authorized", "successful",
-        "failed", "error", "canceled"]
+    _all_values = ["pending", "awaiting", "authorized", "successful", "failed", "error",
+        "canceled"]
     PENDING = "pending"
 
     AWAITING = "awaiting"

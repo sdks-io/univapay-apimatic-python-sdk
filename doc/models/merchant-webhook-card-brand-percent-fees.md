@@ -27,20 +27,12 @@ Per-card-brand percent fee overrides.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_card_brand_percent_fees import MerchantWebhookCardBrandPercentFees
 
 merchant_webhook_card_brand_percent_fees = MerchantWebhookCardBrandPercentFees(
     visa=3.6,
-    american_express=255.3,
     mastercard=3.6,
-    maestro=249.3,
-    discover=29.12,
-    jcb=3.8,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    jcb=3.8
 )
 ```
 

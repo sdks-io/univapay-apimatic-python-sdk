@@ -26,20 +26,8 @@ Represents a single delivery attempt of a webhook event, including the payload s
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.webhook_event import WebhookEvent
-from univapayclientsdk.models.webhook_trigger import WebhookTrigger
 
-webhook_event = WebhookEvent(
-    id='00000188-0000-0000-0000-000000000000',
-    webhook_id='000023ae-0000-0000-0000-000000000000',
-    event=WebhookTrigger.TOKEN_CREATED,
-    data=jsonpickle.decode('{"key1":"val1","key2":"val2"}'),
-    successful=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+webhook_event = WebhookEvent()
 ```
 

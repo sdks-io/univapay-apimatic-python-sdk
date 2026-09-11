@@ -20,18 +20,8 @@ Configuration for credit card company side installments.
 ## Example
 
 ```python
-import jsonpickle
-
-from univapayclientsdk.models.installment_fixed_cycles import InstallmentFixedCycles
-from univapayclientsdk.models.installment_plan_type import InstallmentPlanType
 from univapayclientsdk.models.subscription_installment_plan import SubscriptionInstallmentPlan
 
-subscription_installment_plan = SubscriptionInstallmentPlan(
-    plan_type=InstallmentPlanType.REVOLVING,
-    fixed_cycles=InstallmentFixedCycles.CYCLES_12,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_installment_plan = SubscriptionInstallmentPlan()
 ```
 

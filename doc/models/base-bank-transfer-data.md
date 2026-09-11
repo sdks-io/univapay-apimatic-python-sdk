@@ -21,17 +21,12 @@ Base Bank Transfer Data schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.base_bank_transfer_data import BaseBankTransferData
 
 base_bank_transfer_data = BaseBankTransferData(
     brand='aozora_bank',
     expiration_period='PT168H',
-    expiration_time_shift='23:59:59+09:00',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    expiration_time_shift='23:59:59+09:00'
 )
 ```
 

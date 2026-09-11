@@ -23,7 +23,6 @@ Webhook envelope whose `data` payload is a CustomsDeclaration resource.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.customs_declaration_event import CustomsDeclarationEvent
 from univapayclientsdk.models.customs_declaration_webhook_callback import CustomsDeclarationWebhookCallback
@@ -41,7 +40,6 @@ customs_declaration_webhook_callback = CustomsDeclarationWebhookCallback(
         charge_id='11ef0000-0000-4000-8000-000000000001',
         merchant_id='11ef0000-0000-4000-8000-000000000020',
         store_id='11ef0000-0000-4000-8000-000000000022',
-        platform_id='00000550-0000-0000-0000-000000000000',
         mode='test',
         gateway='wechat_online',
         declaration=CustomsDeclarationWebhookDeclaration(
@@ -57,14 +55,8 @@ customs_declaration_webhook_callback = CustomsDeclarationWebhookCallback(
             charge_transaction_id='wx_charge_12345'
         ),
         status=CustomsDeclarationWebhookStatus.SUCCESSFUL,
-        created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z'),
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        created_on=dateutil.parser.parse('2026-04-09T07:35:50.000000Z')
+    )
 )
 ```
 

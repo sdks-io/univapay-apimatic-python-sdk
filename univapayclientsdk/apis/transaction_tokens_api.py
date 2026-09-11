@@ -31,11 +31,11 @@ from univapayclientsdk.http.http_method_enum import (
 from univapayclientsdk.models.three_ds_issuer_token import (
     ThreeDsIssuerToken,
 )
-from univapayclientsdk.models.transaction_token import (
-    TransactionToken,
-)
 from univapayclientsdk.models.transaction_token_list import (
     TransactionTokenList,
+)
+from univapayclientsdk.utilities.union_type_lookup import (
+    UnionTypeLookUp,
 )
 
 
@@ -91,8 +91,9 @@ class TransactionTokensApi(BaseApi):
             .auth(Single("JWT_TOKEN")),
         ).response(
             ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(TransactionToken.from_dictionary)
+            .deserializer(lambda value: APIHelper.deserialize_union_type(
+                 UnionTypeLookUp
+                 .get("TransactionToken"), value))
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
@@ -127,6 +128,11 @@ class TransactionTokensApi(BaseApi):
         ).execute()
 
     def list_all_transaction_tokens(self,
+                                    search=None,
+                                    customer_id=None,
+                                    mtype=None,
+                                    mode=None,
+                                    active="active",
                                     limit=10,
                                     cursor=None,
                                     cursor_direction="desc"):
@@ -135,6 +141,14 @@ class TransactionTokensApi(BaseApi):
         Lists all transaction tokens across all stores.
 
         Args:
+            search (str, optional): Case-insensitive free-text search.
+            customer_id (uuid|str, optional): Filter by customer ID.
+            mtype (TransactionTokenListType, optional): Filter by token type.
+                `one_time` tokens are excluded from listings and cannot be filtered
+                on; filtering to `recurring` requires the App Token Secret.
+            mode (ModeQuery, optional): Filter by environment mode.
+            active (TransactionTokenActiveFilter, optional): Filter recurring tokens
+                by whether they are still active.
             limit (int, optional): Maximum number of resources to return in one page.
             cursor (uuid|str, optional): Cursor pointing to the resource after which
                 pagination should continue.
@@ -155,6 +169,21 @@ class TransactionTokensApi(BaseApi):
             RequestBuilder().server(Server.DEFAULT)
             .path("/tokens")
             .http_method(HttpMethodEnum.GET)
+            .query_param(Parameter()
+                .key("search")
+                .value(search))
+            .query_param(Parameter()
+                .key("customer_id")
+                .value(customer_id))
+            .query_param(Parameter()
+                .key("type")
+                .value(mtype))
+            .query_param(Parameter()
+                .key("mode")
+                .value(mode))
+            .query_param(Parameter()
+                .key("active")
+                .value(active))
             .query_param(Parameter()
                 .key("limit")
                 .value(limit))
@@ -207,6 +236,11 @@ class TransactionTokensApi(BaseApi):
 
     def list_store_transaction_tokens(self,
                                       store_id,
+                                      search=None,
+                                      customer_id=None,
+                                      mtype=None,
+                                      mode=None,
+                                      active="active",
                                       limit=10,
                                       cursor=None,
                                       cursor_direction="desc"):
@@ -216,6 +250,14 @@ class TransactionTokensApi(BaseApi):
 
         Args:
             store_id (uuid|str): The unique identifier of the store.
+            search (str, optional): Case-insensitive free-text search.
+            customer_id (uuid|str, optional): Filter by customer ID.
+            mtype (TransactionTokenListType, optional): Filter by token type.
+                `one_time` tokens are excluded from listings and cannot be filtered
+                on; filtering to `recurring` requires the App Token Secret.
+            mode (ModeQuery, optional): Filter by environment mode.
+            active (TransactionTokenActiveFilter, optional): Filter recurring tokens
+                by whether they are still active.
             limit (int, optional): Maximum number of resources to return in one page.
             cursor (uuid|str, optional): Cursor pointing to the resource after which
                 pagination should continue.
@@ -241,6 +283,21 @@ class TransactionTokensApi(BaseApi):
                 .value(store_id)
                 .is_required(True)
                 .should_encode(True))
+            .query_param(Parameter()
+                .key("search")
+                .value(search))
+            .query_param(Parameter()
+                .key("customer_id")
+                .value(customer_id))
+            .query_param(Parameter()
+                .key("type")
+                .value(mtype))
+            .query_param(Parameter()
+                .key("mode")
+                .value(mode))
+            .query_param(Parameter()
+                .key("active")
+                .value(active))
             .query_param(Parameter()
                 .key("limit")
                 .value(limit))
@@ -293,7 +350,8 @@ class TransactionTokensApi(BaseApi):
 
     def get_transaction_token(self,
                               store_id,
-                              id):
+                              id,
+                              polling=None):
         """Perform a GET request to /stores/{storeId}/tokens/{id}.
 
         Retrieves the details of an existing transaction token.
@@ -301,6 +359,10 @@ class TransactionTokensApi(BaseApi):
         Args:
             store_id (uuid|str): The unique identifier of the store.
             id (uuid|str): The unique identifier of the resource.
+            polling (bool, optional): If set to true, instructs the API to internally
+                poll the token's 3DS or CVV authorization sub-status until it
+                transitions to another status, or until the ~3 second server-side
+                timeout is reached.
 
         Returns:
             ApiResponse: An object with the response value as well as other useful
@@ -326,14 +388,18 @@ class TransactionTokensApi(BaseApi):
                 .value(id)
                 .is_required(True)
                 .should_encode(True))
+            .query_param(Parameter()
+                .key("polling")
+                .value(polling))
             .header_param(Parameter()
                 .key("accept")
                 .value("application/json"))
             .auth(Single("JWT_TOKEN")),
         ).response(
             ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(TransactionToken.from_dictionary)
+            .deserializer(lambda value: APIHelper.deserialize_union_type(
+                 UnionTypeLookUp
+                 .get("TransactionToken"), value))
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
@@ -437,8 +503,9 @@ class TransactionTokensApi(BaseApi):
             .auth(Single("JWT_TOKEN")),
         ).response(
             ResponseHandler()
-            .deserializer(APIHelper.json_deserialize)
-            .deserialize_into(TransactionToken.from_dictionary)
+            .deserializer(lambda value: APIHelper.deserialize_union_type(
+                 UnionTypeLookUp
+                 .get("TransactionToken"), value))
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
@@ -515,6 +582,183 @@ class TransactionTokensApi(BaseApi):
             .auth(Single("JWT_TOKEN")),
         ).response(
             ResponseHandler()
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def enable_token_three_ds(self,
+                              store_id,
+                              id,
+                              idempotency_key=None,
+                              body=None):
+        """Perform a POST request to /stores/{storeId}/tokens/{id}/three_ds.
+
+        Enables 3-D Secure on an existing `recurring` transaction token that was
+        created without it. Only applies to `recurring` tokens; returns an error if
+        3DS is already enabled. After calling this endpoint, poll the token until
+        `data.three_ds.status` becomes `awaiting`, then use the token 3DS issuer
+        token endpoint to complete authentication.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            id (uuid|str): The unique identifier of the resource.
+            idempotency_key (str, optional): An optional idempotency key to prevent
+                double charges and duplicate operations. We recommend a randomly
+                generated UUID (v4).
+            body (EnableTokenThreeDsRequest, optional): Optional request payload.
+                Omit entirely, or omit `redirect_endpoint`, if no redirect is needed.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. 3DS enabled
+                successfully. Returns the updated token.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/tokens/{id}/three_ds")
+            .http_method(HttpMethodEnum.POST)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .header_param(Parameter()
+                .key("Idempotency-Key")
+                .value(idempotency_key))
+            .body_param(Parameter()
+                .value(body))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(lambda value: APIHelper.deserialize_union_type(
+                 UnionTypeLookUp
+                 .get("TransactionToken"), value))
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def disable_token_three_ds(self,
+                               store_id,
+                               id):
+        """Perform a DELETE request to /stores/{storeId}/tokens/{id}/three_ds.
+
+        Disables 3-D Secure on an existing `recurring` transaction token. Only
+        applies to `recurring` tokens.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            id (uuid|str): The unique identifier of the resource.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. 3DS disabled
+                successfully. Returns the updated token.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/tokens/{id}/three_ds")
+            .http_method(HttpMethodEnum.DELETE)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .template_param(Parameter()
+                .key("id")
+                .value(id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(lambda value: APIHelper.deserialize_union_type(
+                 UnionTypeLookUp
+                 .get("TransactionToken"), value))
             .is_api_response(True)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",

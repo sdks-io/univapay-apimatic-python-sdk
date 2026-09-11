@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Union
 
-from univapayclientsdk.api_helper import ApiHelper
+from univapayclientsdk.api_helper import APIHelper
 from univapayclientsdk.events.unknown_event import (
     UnknownEvent,
 )

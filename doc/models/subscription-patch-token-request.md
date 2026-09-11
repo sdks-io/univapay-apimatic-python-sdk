@@ -19,15 +19,10 @@ Request body for updating the payment method (transaction token) of a subscripti
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.subscription_patch_token_request import SubscriptionPatchTokenRequest
 
 subscription_patch_token_request = SubscriptionPatchTokenRequest(
-    transaction_token_id='11ef3362-3700-c54a-9baa-6f7e6527c9d9',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    transaction_token_id='11ef3362-3700-c54a-9baa-6f7e6527c9d9'
 )
 ```
 

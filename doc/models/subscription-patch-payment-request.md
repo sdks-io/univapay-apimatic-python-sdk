@@ -23,7 +23,6 @@ Request body for updating a scheduled payment. All fields are optional. Omitted 
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.subscription_patch_payment_request import SubscriptionPatchPaymentRequest
 
@@ -31,10 +30,7 @@ subscription_patch_payment_request = SubscriptionPatchPaymentRequest(
     due_date=dateutil.parser.parse('2026-09-01').date(),
     is_paid=False,
     terminate_with_status=None,
-    retry_interval='P3D',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    retry_interval='P3D'
 )
 ```
 

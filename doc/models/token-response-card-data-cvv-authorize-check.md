@@ -22,17 +22,13 @@ Token Response Card Data Cvv Authorize Check schema.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.token_response_card_data_cvv_authorize_check import TokenResponseCardDataCvvAuthorizeCheck
 
 token_response_card_data_cvv_authorize_check = TokenResponseCardDataCvvAuthorizeCheck(
-    status='successful',
+    status='current',
     charge_id=None,
-    date=dateutil.parser.parse('2026-04-09T07:35:50Z'),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    date=dateutil.parser.parse('2026-04-09T07:35:50Z')
 )
 ```
 

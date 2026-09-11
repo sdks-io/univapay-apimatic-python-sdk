@@ -22,8 +22,8 @@ class SubscriptionStatus(object):
 
     """
 
-    _all_values = ["unverified", "unconfirmed", "canceled", "unpaid",
-        "current", "suspended", "completed"]
+    _all_values = ["unverified", "unconfirmed", "canceled", "unpaid", "current", "suspended",
+        "completed"]
     UNVERIFIED = "unverified"
 
     UNCONFIRMED = "unconfirmed"

@@ -19,15 +19,10 @@ QR merchant payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_qr_merchant_configuration import MerchantWebhookQrMerchantConfiguration
 
 merchant_webhook_qr_merchant_configuration = MerchantWebhookQrMerchantConfiguration(
-    enabled=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    enabled=False
 )
 ```
 

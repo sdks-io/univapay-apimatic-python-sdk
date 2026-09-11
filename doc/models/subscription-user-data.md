@@ -24,19 +24,8 @@ Customer-facing payment method summary data.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.subscription_user_data import SubscriptionUserData
 
-subscription_user_data = SubscriptionUserData(
-    mtype='type2',
-    cardholder_name='cardholder_name6',
-    email='email8',
-    brand='brand2',
-    gateway='gateway8',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_user_data = SubscriptionUserData()
 ```
 

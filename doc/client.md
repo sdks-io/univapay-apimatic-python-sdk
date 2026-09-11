@@ -5,7 +5,8 @@ The following parameters are configurable for the API Client:
 
 | Parameter | Type | Description |
 |  --- | --- | --- |
-| base_url | `str` | Base URL for the API<br>*Default*: `"https://api.univapay.com"` |
+| base_url | `str` | Base URL for the API<br>*Default*: `"https://api.gyro-n.money"` |
+| direct_debit_base_url | `str` | Base URL for the Direct Debit API<br>*Default*: `"https://staging-direct-debit.gopay-services.com"` |
 | environment | [`Environment`](../README.md#environments) | The API environment. <br> **Default: `Environment.PRODUCTION`** |
 | http_client_instance | `Union[Session, HttpClientProvider]` | The Http Client passed from the sdk user for making requests |
 | override_http_client_configuration | `bool` | The value which determines to override properties of the passed Http Client from the sdk user |
@@ -38,7 +39,8 @@ client = UnivapayClientSdkClient(
         access_token='AccessToken'
     ),
     environment=Environment.PRODUCTION,
-    base_url='https://api.univapay.com',
+    base_url='https://api.gyro-n.money',
+    direct_debit_base_url='https://staging-direct-debit.gopay-services.com',
     logging_configuration=LoggingConfiguration(
         log_level=logging.INFO,
         request_logging_config=RequestLoggingConfiguration(
@@ -78,4 +80,7 @@ The gateway for the SDK. This class acts as a factory for the Apis and also hold
 | merchants | Gets MerchantsApi |
 | stores | Gets StoresApi |
 | webhooks | Gets WebhooksApi |
+| direct_debit | Gets DirectDebitApi |
+| checkout | Gets CheckoutApi |
+| transaction_history | Gets TransactionHistoryApi |
 

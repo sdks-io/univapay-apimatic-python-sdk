@@ -20,18 +20,13 @@ QR scan payment settings.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_qr_scan_configuration import MerchantWebhookQrScanConfiguration
 
 merchant_webhook_qr_scan_configuration = MerchantWebhookQrScanConfiguration(
     enabled=True,
     forbidden_qr_scan_gateways=[
         'wechat'
-    ],
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    ]
 )
 ```
 

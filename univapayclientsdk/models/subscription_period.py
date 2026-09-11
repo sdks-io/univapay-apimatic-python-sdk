@@ -22,8 +22,8 @@ class SubscriptionPeriod(object):
 
     """
 
-    _all_values = ["daily", "weekly", "biweekly", "monthly", "quarterly",
-        "semiannually", "annually"]
+    _all_values = ["daily", "weekly", "biweekly", "monthly", "quarterly", "semiannually",
+        "annually"]
     DAILY = "daily"
 
     WEEKLY = "weekly"

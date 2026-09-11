@@ -17,9 +17,23 @@ class PlanSettingsType(object):
 
     """
 
+    _all_values = ["fixed_cycles", "fixed_cycle_amount"]
     FIXED_CYCLES = "fixed_cycles"
 
     FIXED_CYCLE_AMOUNT = "fixed_cycle_amount"
+
+    @classmethod
+    def validate(cls, value):
+        """Validate value contains in enum
+
+        Args:
+            value: the value to be validated
+
+        Returns:
+            boolean : if value is valid enum values.
+
+        """
+        return value in cls._all_values
 
     @classmethod
     def from_value(cls, value, default=None):

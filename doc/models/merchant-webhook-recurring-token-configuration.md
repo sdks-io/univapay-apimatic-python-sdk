@@ -21,8 +21,6 @@ Recurring token configuration inherited by the merchant.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_recurring_cvv_confirmation_config import MerchantWebhookRecurringCvvConfirmationConfig
 from univapayclientsdk.models.merchant_webhook_recurring_token_configuration import MerchantWebhookRecurringTokenConfiguration
 
@@ -30,17 +28,8 @@ merchant_webhook_recurring_token_configuration = MerchantWebhookRecurringTokenCo
     recurring_type='infinite',
     charge_wait_period='P7D',
     card_charge_cvv_confirmation=MerchantWebhookRecurringCvvConfirmationConfig(
-        enabled=False,
-        threshold=[
-            None
-        ],
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        enabled=False
+    )
 )
 ```
 

@@ -1,7 +1,7 @@
 
 # Merchant Webhook Configuration
 
-Merchant configuration object serialized by gyron-payments-api.
+Merchant configuration object as serialized by the backend.
 
 *This model accepts additional fields of type Any.*
 
@@ -47,8 +47,6 @@ Merchant configuration object serialized by gyron-payments-api.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.card_processor_installment_config import CardProcessorInstallmentConfig
 from univapayclientsdk.models.merchant_webhook_bank_transfer_configuration import MerchantWebhookBankTransferConfiguration
 from univapayclientsdk.models.merchant_webhook_card_brand_percent_fees import MerchantWebhookCardBrandPercentFees
@@ -79,13 +77,9 @@ merchant_webhook_configuration = MerchantWebhookConfiguration(
     flat_fees=[
         MerchantWebhookMoneyAmount(
             amount=100,
-            currency='JPY',
-            additional_properties={
-                'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-            }
+            currency='JPY'
         )
     ],
-    logo_url='logo_url6',
     country='JP',
     language='ja',
     display_time_zone='Asia/Tokyo',
@@ -242,10 +236,7 @@ merchant_webhook_configuration = MerchantWebhookConfiguration(
         remind_notification_enabled=True
     ),
     platform_credentials_enabled=True,
-    tagged_platform_credentials_enabled=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    tagged_platform_credentials_enabled=False
 )
 ```
 

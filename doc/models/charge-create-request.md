@@ -22,31 +22,18 @@ Request payload for creating a charge.
 | `metadata` | [`GenericMetadata`](../../doc/models/generic-metadata.md) | Optional | A free-form dictionary for custom metadata. |
 | `client_metadata` | [`ChargeCreateRequestClientMetadata`](../../doc/models/charge-create-request-client-metadata.md) | Optional | Charge Create Request Client Metadata schema. |
 | `redirect` | [`ChargeCreateRequestRedirect`](../../doc/models/charge-create-request-redirect.md) | Optional | Charge Create Request Redirect schema. |
-| `three_ds` | [`ChargeCreateRequestThreeDs`](../../doc/models/charge-create-request-three-ds.md) | Optional | Charge Create Request Three Ds schema. |
+| `three_ds` | [`ChargeCreateRequestThreeDs`](../../doc/models/charge-create-request-three-ds.md) | Optional | Charge Create Request Three Ds schema. Either supply `mode` (and optionally `redirect_endpoint`) to have Univapay run 3DS, or supply all six external-MPI fields (`authentication_value` through `transaction_status`) when 3DS authentication was already completed outside of Univapay — in that case `mode` is set to `provided` automatically and must not be sent. |
 | `additional_properties` | `Dict[str, Any]` | Optional | - |
 
 ## Example
 
 ```python
-import dateutil.parser
-import jsonpickle
-
 from univapayclientsdk.models.charge_create_request import ChargeCreateRequest
-from univapayclientsdk.models.charge_create_request_client_metadata import ChargeCreateRequestClientMetadata
-from univapayclientsdk.models.generic_metadata import GenericMetadata
 
 charge_create_request = ChargeCreateRequest(
     transaction_token_id='af834c88-7a8f-47ac-aee9-0386a0f98b0d',
     amount=1000,
-    currency='JPY',
-    capture=False,
-    capture_at=dateutil.parser.parse('2016-03-13T12:52:32.123Z'),
-    merchant_transaction_id='merchant_transaction_id8',
-    metadata=GenericMetadata(),
-    client_metadata=ChargeCreateRequestClientMetadata(),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    currency='JPY'
 )
 ```
 

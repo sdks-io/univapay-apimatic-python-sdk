@@ -20,8 +20,10 @@ class TransactionTokenCreateRequestMetadata(object):
             it (e.g., konbini, bank transfer).
         univapay_phone_number (str): Consumer phone number passed to payment
             processors that require it.
-        additional_properties (Dict[str, str | bool | float]): Transaction Token
-            Create Metadata Props schema.
+        additional_properties (Dict[str, str | None | int | float | bool | List[str |
+            bool]]): Alias of GenericMetadataValue, retained because this schema name
+            is part of the published SDK surface. Do not narrow it — see
+            GenericMetadataValue for the contract.
 
     """
 

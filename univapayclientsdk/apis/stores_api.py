@@ -28,6 +28,9 @@ from univapayclientsdk.exceptions.api_exception import (
 from univapayclientsdk.http.http_method_enum import (
     HttpMethodEnum,
 )
+from univapayclientsdk.models.create_customer_id_response import (
+    CreateCustomerIdResponse,
+)
 from univapayclientsdk.models.store import Store
 from univapayclientsdk.models.store_list import (
     StoreList,
@@ -184,6 +187,90 @@ class StoresApi(BaseApi):
                 ApiException)
             .local_error_template("400",
                 "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiException)
+            .local_error_template("409",
+                "HTTP 409 Conflict: {$response.body#/code}",
+                ApiException)
+            .local_error_template("500",
+                "HTTP 500 Server Error: {$response.body#/code}",
+                ApiException)
+            .local_error_template("503",
+                "HTTP 503 Unavailable: {$response.body#/code}",
+                ApiException)
+            .local_error_template("504",
+                "HTTP 504 Timeout: {$response.body#/code}",
+                ApiException)
+            .local_error_template("default",
+                "HTTP {$statusCode}: {$response.body#/code}",
+                ApiException),
+        ).execute()
+
+    def create_customer_id(self,
+                           store_id,
+                           body):
+        """Perform a POST request to /stores/{storeId}/create_customer_id.
+
+        Derives a deterministic, store-scoped UUID from a local customer identifier
+        supplied by the merchant. Calling this endpoint again with the same
+        `customer_id` for the same store always returns the same UUID — the operation
+        has no side effects (nothing is persisted), so it is safe to call repeatedly
+        and does not require an `Idempotency-Key`. App Token Secret is required.
+
+        Args:
+            store_id (uuid|str): The unique identifier of the store.
+            body (CreateCustomerIdRequest): Request payload for deriving a customer
+                ID.
+
+        Returns:
+            ApiResponse: An object with the response value as well as other useful
+                information such as status codes and headers. Customer ID derived
+                successfully.
+
+        Raises:
+            ApiException: When an error occurs while fetching the data from the
+                remote API. This exception includes the HTTP Response code, an error
+                message, and the HTTP body that was received in the request.
+
+        """
+        return super().new_api_call_builder.request(
+            RequestBuilder().server(Server.DEFAULT)
+            .path("/stores/{storeId}/create_customer_id")
+            .http_method(HttpMethodEnum.POST)
+            .template_param(Parameter()
+                .key("storeId")
+                .value(store_id)
+                .is_required(True)
+                .should_encode(True))
+            .header_param(Parameter()
+                .key("Content-Type")
+                .value("application/json"))
+            .body_param(Parameter()
+                .value(body)
+                .is_required(True))
+            .header_param(Parameter()
+                .key("accept")
+                .value("application/json"))
+            .body_serializer(APIHelper.json_serialize)
+            .auth(Single("JWT_TOKEN")),
+        ).response(
+            ResponseHandler()
+            .deserializer(APIHelper.json_deserialize)
+            .deserialize_into(CreateCustomerIdResponse.from_dictionary)
+            .is_api_response(True)
+            .local_error_template("400",
+                "HTTP 400 Bad Request: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("401",
+                "HTTP 401 Unauthorized: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("403",
+                "HTTP 403 Forbidden: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("404",
+                "HTTP 404 Not Found: {$response.body#/code}",
+                ApiErrorException)
+            .local_error_template("429",
+                "HTTP 429 Rate Limited: {$response.body#/code}",
                 ApiException)
             .local_error_template("409",
                 "HTTP 409 Conflict: {$response.body#/code}",

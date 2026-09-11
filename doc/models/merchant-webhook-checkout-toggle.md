@@ -19,15 +19,10 @@ Checkout feature toggle.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_checkout_toggle import MerchantWebhookCheckoutToggle
 
 merchant_webhook_checkout_toggle = MerchantWebhookCheckoutToggle(
-    enabled=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    enabled=True
 )
 ```
 

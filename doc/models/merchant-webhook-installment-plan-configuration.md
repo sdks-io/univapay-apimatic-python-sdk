@@ -24,8 +24,6 @@ Installment plan configuration.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.card_processor_installment_config import CardProcessorInstallmentConfig
 from univapayclientsdk.models.merchant_webhook_installment_plan_configuration import MerchantWebhookInstallmentPlanConfiguration
 from univapayclientsdk.models.merchant_webhook_money_amount import MerchantWebhookMoneyAmount
@@ -34,26 +32,17 @@ merchant_webhook_installment_plan_configuration = MerchantWebhookInstallmentPlan
     enabled=True,
     card_processor=CardProcessorInstallmentConfig(
         revolving=True,
-        fixed_cycle=True,
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        fixed_cycle=True
     ),
     supported_payment_types=[
         'card'
     ],
     min_charge_amount=MerchantWebhookMoneyAmount(
         amount=3000,
-        currency='JPY',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        currency='JPY'
     ),
     max_payout_period='P12M',
-    only_with_processor=True,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    only_with_processor=True
 )
 ```
 

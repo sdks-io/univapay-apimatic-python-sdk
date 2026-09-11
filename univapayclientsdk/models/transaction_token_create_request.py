@@ -20,6 +20,9 @@ from univapayclientsdk.models.transaction_token_create_request_type import (
 class TransactionTokenCreateRequest(object):
     """Implementation of the 'TransactionTokenCreateRequest' model.
 
+    Request payload for creating a transaction token, which represents a payment
+    method to charge against.
+
     Attributes:
         payment_type (TransactionTokenCreateRequestPaymentType): Transaction Token
             Create Request Payment Type schema.
@@ -32,8 +35,9 @@ class TransactionTokenCreateRequest(object):
         metadata (TransactionTokenCreateRequestMetadata): A free-form dictionary for
             custom metadata.
         data (TokenCreateCardData | TokenCreateKonbiniData | TokenCreateOnlineData |
-            TokenCreateBankTransferData): Transaction Token Create Request Data
-            schema.
+            TokenCreateBankTransferData | TokenCreatePaidyData |
+            TokenCreateQrScanData | TokenCreateQrMerchantData): Transaction Token
+            Create Request Data schema.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.
 

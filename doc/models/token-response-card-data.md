@@ -24,7 +24,6 @@ Token Response Card Data schema.
 
 ```python
 import dateutil.parser
-import jsonpickle
 
 from univapayclientsdk.models.token_response_card_data import TokenResponseCardData
 from univapayclientsdk.models.token_response_card_data_billing import TokenResponseCardDataBilling
@@ -47,10 +46,7 @@ token_response_card_data = TokenResponseCardData(
         country='JP',
         category='standard',
         issuer=None,
-        sub_brand='none',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        sub_brand='none'
     ),
     billing=TokenResponseCardDataBilling(
         line_1='1-1-1',
@@ -62,28 +58,19 @@ token_response_card_data = TokenResponseCardData(
         phone_number=TokenResponsePhoneNumber(
             country_code=81,
             local_number='08012341234'
-        ),
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        )
     ),
     cvv_authorize=TokenResponseCardDataCvvAuthorize(
         enabled=True,
         status='successful',
         charge_id=None,
         credentials_id=None,
-        currency='JPY',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        currency='JPY'
     ),
     cvv_authorize_check=TokenResponseCardDataCvvAuthorizeCheck(
         status='successful',
         charge_id=None,
-        date=dateutil.parser.parse('2026-04-09T07:35:50Z'),
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        date=dateutil.parser.parse('2026-04-09T07:35:50Z')
     ),
     three_ds=TokenResponseCardDataThreeDs(
         enabled=True,
@@ -91,14 +78,8 @@ token_response_card_data = TokenResponseCardData(
         redirect_endpoint=None,
         redirect_id=None,
         exempted=False,
-        error=None,
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        error=None
+    )
 )
 ```
 

@@ -1,19 +1,21 @@
 
 # Generic Metadata Value
 
-Allowed values for metadata properties.
+Allowed values for metadata properties. Values may be a string, number, boolean, null, or an array of any of the above — but not a nested object; the server rejects metadata whose direct property values are JSON objects.
 
 ## Data Type
 
-`str | float | bool`
+`str | None | int | float | bool | List[str | bool]`
 
 ## Cases
 
 | Type |
 |  --- |
 | `str` |
+| `int` |
 | `float` |
 | `bool` |
+| [`List[Any]`](../../../doc/models/containers/generic-metadata-array-item.md) |
 
 ## str
 
@@ -25,7 +27,7 @@ Allowed values for metadata properties.
 value = 'sale'
 ```
 
-## float
+## int
 
 ### Initialization Code
 
@@ -33,6 +35,16 @@ value = 'sale'
 
 ```python
 value = 10
+```
+
+## float
+
+### Initialization Code
+
+#### Example
+
+```python
+value = 10.5
 ```
 
 ## bool
@@ -43,5 +55,18 @@ value = 10
 
 ```python
 value = True
+```
+
+## List[Any]
+
+### Initialization Code
+
+#### Example
+
+```python
+value = [
+    'sale',
+    'promo'
+]
 ```
 

@@ -20,18 +20,10 @@ CVV confirmation rules for recurring token charges.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_recurring_cvv_confirmation_config import MerchantWebhookRecurringCvvConfirmationConfig
 
 merchant_webhook_recurring_cvv_confirmation_config = MerchantWebhookRecurringCvvConfirmationConfig(
-    enabled=False,
-    threshold=[
-        None
-    ],
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    enabled=False
 )
 ```
 

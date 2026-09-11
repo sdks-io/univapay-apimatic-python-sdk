@@ -30,20 +30,8 @@ Next scheduled payment details for a subscription.
 ## Example
 
 ```python
-import dateutil.parser
-import jsonpickle
-
 from univapayclientsdk.models.subscription_next_payment import SubscriptionNextPayment
 
-subscription_next_payment = SubscriptionNextPayment(
-    id='00002650-0000-0000-0000-000000000000',
-    due_date=dateutil.parser.parse('2016-03-13').date(),
-    zone_id='zone_id4',
-    amount=18,
-    currency='currency8',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+subscription_next_payment = SubscriptionNextPayment()
 ```
 

@@ -23,8 +23,6 @@ Subscription feature configuration.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_subscription_configuration import MerchantWebhookSubscriptionConfiguration
 
 merchant_webhook_subscription_configuration = MerchantWebhookSubscriptionConfiguration(
@@ -32,10 +30,7 @@ merchant_webhook_subscription_configuration = MerchantWebhookSubscriptionConfigu
     failed_charges_to_cancel=3,
     suspend_on_cancel=True,
     allow_merchant_amount_patch=False,
-    allow_merchant_due_date_patch=False,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    allow_merchant_due_date_patch=False
 )
 ```
 

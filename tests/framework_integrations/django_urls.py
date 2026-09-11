@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from tests.framework_integrations.webhooks.apps.django_charge_updated_app import (
+from tests.framework_integrations.webhooks.apps.django_charge_app import (
     webhooks,
 )
 

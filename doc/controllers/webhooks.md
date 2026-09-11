@@ -18,7 +18,6 @@ webhooks_api = client.webhooks
 * [Update Webhook](../../doc/controllers/webhooks.md#update-webhook)
 * [Delete Webhook](../../doc/controllers/webhooks.md#delete-webhook)
 * [List Webhook Events](../../doc/controllers/webhooks.md#list-webhook-events)
-* [Redeliver Webhook Event](../../doc/controllers/webhooks.md#redeliver-webhook-event)
 
 
 # List Webhooks
@@ -526,76 +525,6 @@ elif result.is_error():
   ],
   "has_more": false
 }
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 401 | Unauthorized (401). Authentication failed.  Common codes: AUTH_HEADER_MISSING, INVALID_APP_TOKEN, INVALID_CREDENTIALS. | [`ApiErrorException`](../../doc/models/api-error-exception.md) |
-| 403 | Forbidden (403). The request is understood, but access is refused.  This occurs if permissions are insufficient or if a security lock is triggered. | [`ApiErrorException`](../../doc/models/api-error-exception.md) |
-| 404 | Not Found (404). The requested resource (e.g., Store ID or Token ID) does not exist. | [`ApiErrorException`](../../doc/models/api-error-exception.md) |
-
-
-# Redeliver Webhook Event
-
-Re-sends the webhook payload for a previously delivered (or failed) event. Returns 202 Accepted immediately; delivery is asynchronous.
-
-```python
-def redeliver_webhook_event(self,
-                           store_id,
-                           id,
-                           event_id,
-                           idempotency_key=None)
-```
-
-## Authentication
-
-This endpoint requires [JWT_TOKEN](../../doc/auth/oauth-2-bearer-token.md)
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `store_id` | `uuid\|str` | Template, Required | The unique identifier of the store. |
-| `id` | `uuid\|str` | Template, Required | The unique identifier of the resource. |
-| `event_id` | `uuid\|str` | Template, Required | The unique identifier of the webhook event. |
-| `idempotency_key` | `str` | Header, Optional | An optional idempotency key to prevent double charges and duplicate operations. We recommend a randomly generated UUID (v4). |
-
-## Response Type
-
-**202**: Redelivery accepted. Returns an empty JSON object; delivery remains asynchronous.
-
-This method returns an [`ApiResponse`](../../doc/api-response.md) instance. The `body` property of this instance returns the response data which is of type `Any`.
-
-## Example Usage
-
-```python
-store_id = '0cab399b-5621-425b-993b-f8507eba1e78'
-
-id = 'c4e87129-cad4-47fb-8ded-b4c0a4ae0dd4'
-
-event_id = 'e1f2a3b4-c5d6-7890-efab-123456789cde'
-
-idempotency_key = 'f64be872-353d-4c3c-84cb-3dc617fe89f7'
-
-result = webhooks_api.redeliver_webhook_event(
-    store_id,
-    id,
-    event_id,
-    idempotency_key=idempotency_key
-)
-
-if result.is_success():
-    print(result.body)
-elif result.is_error():
-    print(result.errors)
-```
-
-## Example Response
-
-```
-{}
 ```
 
 ## Errors

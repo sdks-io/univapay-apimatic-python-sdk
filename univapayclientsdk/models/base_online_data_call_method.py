@@ -21,8 +21,7 @@ class BaseOnlineDataCallMethod(object):
 
     """
 
-    _all_values = ["http_get", "http_post", "http_get_mobile", "sdk", "web",
-        "app"]
+    _all_values = ["http_get", "http_post", "http_get_mobile", "sdk", "web", "app"]
     HTTP_GET = "http_get"
 
     HTTP_POST = "http_post"

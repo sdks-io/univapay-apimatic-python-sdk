@@ -24,8 +24,6 @@ Token Response Card Data Three Ds schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_response_card_data_three_ds import TokenResponseCardDataThreeDs
 from univapayclientsdk.models.token_response_card_data_three_ds_status import TokenResponseCardDataThreeDsStatus
 
@@ -35,10 +33,7 @@ token_response_card_data_three_ds = TokenResponseCardDataThreeDs(
     redirect_endpoint=None,
     redirect_id=None,
     exempted=False,
-    error=None,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    error=None
 )
 ```
 

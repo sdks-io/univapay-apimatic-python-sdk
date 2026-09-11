@@ -26,21 +26,14 @@ Transfer schedule configuration inherited by the merchant.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_transfer_schedule_configuration import MerchantWebhookTransferScheduleConfiguration
 
 merchant_webhook_transfer_schedule_configuration = MerchantWebhookTransferScheduleConfiguration(
     wait_period='P7D',
     period='weekly',
     full_period_required=False,
-    day_of_week='day_of_week6',
-    week_of_month=124,
     weekly_closing_day='sunday',
-    weekly_payout_day='friday',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    weekly_payout_day='friday'
 )
 ```
 

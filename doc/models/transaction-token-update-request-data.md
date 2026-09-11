@@ -30,8 +30,6 @@ Transaction Token Update Request Data schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.transaction_token_update_request_data import TransactionTokenUpdateRequestData
 from univapayclientsdk.models.transaction_token_update_request_data_phone_number import TransactionTokenUpdateRequestDataPhoneNumber
 
@@ -50,10 +48,7 @@ transaction_token_update_request_data = TransactionTokenUpdateRequestData(
     phone_number=TransactionTokenUpdateRequestDataPhoneNumber(
         country_code='81',
         local_number='08012341234'
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    )
 )
 ```
 

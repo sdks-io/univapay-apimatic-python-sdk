@@ -30,41 +30,41 @@ from apimatic_core.types.union_types.union_type_context import (
 from univapayclientsdk.models.bank_transfer_status_webhook_callback import (
     BankTransferStatusWebhookCallback,
 )
+from univapayclientsdk.models.bank_transfer_transaction_token import (
+    BankTransferTransactionToken,
+)
 from univapayclientsdk.models.cancel_webhook_callback import (
     CancelWebhookCallback,
 )
-from univapayclientsdk.models.charge_finished_webhook_callback import (
-    ChargeFinishedWebhookCallback,
+from univapayclientsdk.models.card_transaction_token import (
+    CardTransactionToken,
 )
-from univapayclientsdk.models.charge_updated_webhook_callback import (
-    ChargeUpdatedWebhookCallback,
+from univapayclientsdk.models.charge_webhook_event import (
+    ChargeWebhookEvent,
 )
 from univapayclientsdk.models.customs_declaration_webhook_callback import (
     CustomsDeclarationWebhookCallback,
 )
-from univapayclientsdk.models.recurring_token_deleted_webhook_callback import (
-    RecurringTokenDeletedWebhookCallback,
+from univapayclientsdk.models.konbini_transaction_token import (
+    KonbiniTransactionToken,
+)
+from univapayclientsdk.models.online_transaction_token import (
+    OnlineTransactionToken,
+)
+from univapayclientsdk.models.paidy_transaction_token import (
+    PaidyTransactionToken,
+)
+from univapayclientsdk.models.qr_merchant_transaction_token import (
+    QrMerchantTransactionToken,
+)
+from univapayclientsdk.models.qr_scan_transaction_token import (
+    QrScanTransactionToken,
 )
 from univapayclientsdk.models.refund_webhook_callback import (
     RefundWebhookCallback,
 )
-from univapayclientsdk.models.subscription_canceled_webhook_callback import (
-    SubscriptionCanceledWebhookCallback,
-)
-from univapayclientsdk.models.subscription_completed_webhook_callback import (
-    SubscriptionCompletedWebhookCallback,
-)
-from univapayclientsdk.models.subscription_created_webhook_callback import (
-    SubscriptionCreatedWebhookCallback,
-)
-from univapayclientsdk.models.subscription_failure_webhook_callback import (
-    SubscriptionFailureWebhookCallback,
-)
-from univapayclientsdk.models.subscription_payment_webhook_callback import (
-    SubscriptionPaymentWebhookCallback,
-)
-from univapayclientsdk.models.subscription_suspended_webhook_callback import (
-    SubscriptionSuspendedWebhookCallback,
+from univapayclientsdk.models.subscription_webhook_event import (
+    SubscriptionWebhookEvent,
 )
 from univapayclientsdk.models.token_create_bank_transfer_data import (
     TokenCreateBankTransferData,
@@ -78,35 +78,17 @@ from univapayclientsdk.models.token_create_konbini_data import (
 from univapayclientsdk.models.token_create_online_data import (
     TokenCreateOnlineData,
 )
-from univapayclientsdk.models.token_created_webhook_callback import (
-    TokenCreatedWebhookCallback,
+from univapayclientsdk.models.token_create_paidy_data import (
+    TokenCreatePaidyData,
 )
-from univapayclientsdk.models.token_cvv_auth_check_updated_webhook_callback import (
-    TokenCvvAuthCheckUpdatedWebhookCallback,
+from univapayclientsdk.models.token_create_qr_merchant_data import (
+    TokenCreateQrMerchantData,
 )
-from univapayclientsdk.models.token_cvv_auth_updated_webhook_callback import (
-    TokenCvvAuthUpdatedWebhookCallback,
+from univapayclientsdk.models.token_create_qr_scan_data import (
+    TokenCreateQrScanData,
 )
-from univapayclientsdk.models.token_replaced_webhook_callback import (
-    TokenReplacedWebhookCallback,
-)
-from univapayclientsdk.models.token_response_bank_transfer_data import (
-    TokenResponseBankTransferData,
-)
-from univapayclientsdk.models.token_response_card_data import (
-    TokenResponseCardData,
-)
-from univapayclientsdk.models.token_response_konbini_data import (
-    TokenResponseKonbiniData,
-)
-from univapayclientsdk.models.token_response_online_data import (
-    TokenResponseOnlineData,
-)
-from univapayclientsdk.models.token_three_ds_updated_webhook_callback import (
-    TokenThreeDsUpdatedWebhookCallback,
-)
-from univapayclientsdk.models.token_updated_webhook_callback import (
-    TokenUpdatedWebhookCallback,
+from univapayclientsdk.models.token_webhook_event import (
+    TokenWebhookEvent,
 )
 
 
@@ -125,11 +107,82 @@ class UnionTypeLookUp:
     """
 
     _templates: ClassVar[dict[str, Callable]] = {
-        "GenericMetadataValue": lambda: AnyOf(
+        "TransactionToken": lambda: OneOf(
             [
-                LeafType(str),
+                LeafType(CardTransactionToken,
+                         Context.create(
+                             discriminator_value="card",
+                             discriminator="payment_type",
+                         )),
+                LeafType(KonbiniTransactionToken,
+                         Context.create(
+                             discriminator_value="konbini",
+                             discriminator="payment_type",
+                         )),
+                LeafType(OnlineTransactionToken,
+                         Context.create(
+                             discriminator_value="online",
+                             discriminator="payment_type",
+                         )),
+                LeafType(BankTransferTransactionToken,
+                         Context.create(
+                             discriminator_value="bank_transfer",
+                             discriminator="payment_type",
+                         )),
+                LeafType(PaidyTransactionToken,
+                         Context.create(
+                             discriminator_value="paidy",
+                             discriminator="payment_type",
+                         )),
+                LeafType(QrScanTransactionToken,
+                         Context.create(
+                             discriminator_value="qr_scan",
+                             discriminator="payment_type",
+                         )),
+                LeafType(QrMerchantTransactionToken,
+                         Context.create(
+                             discriminator_value="qr_merchant",
+                             discriminator="payment_type",
+                         )),
+            ],
+        ),
+        "GenericMetadataArrayItem": lambda: AnyOf(
+            [
+                LeafType(str,
+                         Context.create(
+                             is_nullable=True,
+                         )),
+                LeafType(int),
                 LeafType(float),
                 LeafType(bool),
+            ],
+            Context.create(
+               is_array=True,
+            ),
+        ),
+        "GenericMetadataValue": lambda: AnyOf(
+            [
+                LeafType(str,
+                         Context.create(
+                             is_nullable=True,
+                         )),
+                LeafType(int),
+                LeafType(float),
+                LeafType(bool),
+                AnyOf(
+                    [
+                        LeafType(str,
+                                 Context.create(
+                                     is_nullable=True,
+                                 )),
+                        LeafType(int),
+                        LeafType(float),
+                        LeafType(bool),
+                    ],
+                    Context.create(
+                       is_array=True,
+                    ),
+                ),
             ],
         ),
         "TransactionTokenCreateRequestData": lambda: AnyOf(
@@ -138,112 +191,154 @@ class UnionTypeLookUp:
                 LeafType(TokenCreateKonbiniData),
                 LeafType(TokenCreateOnlineData),
                 LeafType(TokenCreateBankTransferData),
+                LeafType(TokenCreatePaidyData),
+                LeafType(TokenCreateQrScanData),
+                LeafType(TokenCreateQrMerchantData),
             ],
         ),
-        "TransactionTokenCreateMetadataProps": lambda: OneOf(
+        "TransactionTokenCreateMetadataProps": lambda: AnyOf(
             [
-                LeafType(str),
-                LeafType(bool),
+                LeafType(str,
+                         Context.create(
+                             is_nullable=True,
+                         )),
+                LeafType(int),
                 LeafType(float),
+                LeafType(bool),
+                AnyOf(
+                    [
+                        LeafType(str,
+                                 Context.create(
+                                     is_nullable=True,
+                                 )),
+                        LeafType(int),
+                        LeafType(float),
+                        LeafType(bool),
+                    ],
+                    Context.create(
+                       is_array=True,
+                    ),
+                ),
             ],
         ),
         "TransactionTokenMetadataAdditionalProperties": lambda: AnyOf(
             [
-                LeafType(str),
+                LeafType(str,
+                         Context.create(
+                             is_nullable=True,
+                         )),
+                LeafType(int),
                 LeafType(float),
                 LeafType(bool),
+                AnyOf(
+                    [
+                        LeafType(str,
+                                 Context.create(
+                                     is_nullable=True,
+                                 )),
+                        LeafType(int),
+                        LeafType(float),
+                        LeafType(bool),
+                    ],
+                    Context.create(
+                       is_array=True,
+                    ),
+                ),
             ],
             Context.create(
                is_dict=True,
                is_optional=True,
             ),
         ),
-        "TransactionTokenData": lambda: AnyOf(
+        "TransactionToken2": lambda: OneOf(
             [
-                LeafType(TokenResponseCardData),
-                LeafType(TokenResponseKonbiniData),
-                LeafType(TokenResponseOnlineData),
-                LeafType(TokenResponseBankTransferData),
+                LeafType(CardTransactionToken,
+                         Context.create(
+                             discriminator_value="card",
+                             discriminator="payment_type",
+                         )),
+                LeafType(KonbiniTransactionToken,
+                         Context.create(
+                             discriminator_value="konbini",
+                             discriminator="payment_type",
+                         )),
+                LeafType(OnlineTransactionToken,
+                         Context.create(
+                             discriminator_value="online",
+                             discriminator="payment_type",
+                         )),
+                LeafType(BankTransferTransactionToken,
+                         Context.create(
+                             discriminator_value="bank_transfer",
+                             discriminator="payment_type",
+                         )),
+                LeafType(PaidyTransactionToken,
+                         Context.create(
+                             discriminator_value="paidy",
+                             discriminator="payment_type",
+                         )),
+                LeafType(QrScanTransactionToken,
+                         Context.create(
+                             discriminator_value="qr_scan",
+                             discriminator="payment_type",
+                         )),
+                LeafType(QrMerchantTransactionToken,
+                         Context.create(
+                             discriminator_value="qr_merchant",
+                             discriminator="payment_type",
+                         )),
             ],
             Context.create(
                is_optional=True,
             ),
         ),
-        "chargeUpdated": lambda: OneOf(
+        "charge": lambda: OneOf(
             [
-                LeafType(ChargeUpdatedWebhookCallback,
+                LeafType(ChargeWebhookEvent,
                          Context.create(
                              discriminator_value="charge_updated",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "chargeFinished": lambda: OneOf(
-            [
-                LeafType(ChargeFinishedWebhookCallback,
+                LeafType(ChargeWebhookEvent,
                          Context.create(
                              discriminator_value="charge_finished",
                              discriminator="event",
                          )),
             ],
         ),
-        "tokenCreated": lambda: OneOf(
+        "token": lambda: OneOf(
             [
-                LeafType(TokenCreatedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_created",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "tokenUpdated": lambda: OneOf(
-            [
-                LeafType(TokenUpdatedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_updated",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "tokenThreeDsUpdated": lambda: OneOf(
-            [
-                LeafType(TokenThreeDsUpdatedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_three_d_s_updated",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "tokenCvvAuthUpdated": lambda: OneOf(
-            [
-                LeafType(TokenCvvAuthUpdatedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_cvv_auth_updated",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "tokenCvvAuthCheckUpdated": lambda: OneOf(
-            [
-                LeafType(TokenCvvAuthCheckUpdatedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_cvv_auth_check_updated",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "tokenReplaced": lambda: OneOf(
-            [
-                LeafType(TokenReplacedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="token_replaced",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "recurringTokenDeleted": lambda: OneOf(
-            [
-                LeafType(RecurringTokenDeletedWebhookCallback,
+                LeafType(TokenWebhookEvent,
                          Context.create(
                              discriminator_value="recurring_token_deleted",
                              discriminator="event",
@@ -268,54 +363,34 @@ class UnionTypeLookUp:
                          )),
             ],
         ),
-        "subscriptionCreated": lambda: OneOf(
+        "subscription": lambda: OneOf(
             [
-                LeafType(SubscriptionCreatedWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_created",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "subscriptionPayment": lambda: OneOf(
-            [
-                LeafType(SubscriptionPaymentWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_payment",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "subscriptionCompleted": lambda: OneOf(
-            [
-                LeafType(SubscriptionCompletedWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_completed",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "subscriptionFailure": lambda: OneOf(
-            [
-                LeafType(SubscriptionFailureWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_failure",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "subscriptionCanceled": lambda: OneOf(
-            [
-                LeafType(SubscriptionCanceledWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_canceled",
                              discriminator="event",
                          )),
-            ],
-        ),
-        "subscriptionSuspended": lambda: OneOf(
-            [
-                LeafType(SubscriptionSuspendedWebhookCallback,
+                LeafType(SubscriptionWebhookEvent,
                          Context.create(
                              discriminator_value="subscription_suspended",
                              discriminator="event",

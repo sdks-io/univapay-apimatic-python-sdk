@@ -65,7 +65,7 @@ from univapayclientsdk.models.merchant_webhook_user_transactions_configuration i
 class MerchantWebhookConfiguration(object):
     """Implementation of the 'MerchantWebhookConfiguration' model.
 
-    Merchant configuration object serialized by gyron-payments-api.
+    Merchant configuration object as serialized by the backend.
 
     Attributes:
         percent_fee (float): Default percent fee applied when no card-brand override

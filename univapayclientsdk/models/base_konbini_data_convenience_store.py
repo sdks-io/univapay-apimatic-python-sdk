@@ -23,8 +23,8 @@ class BaseKonbiniDataConvenienceStore(object):
 
     """
 
-    _all_values = ["seven_eleven", "family_mart", "lawson", "mini_stop",
-        "seico_mart", "pay_easy", "daily_yamazaki", "yamazaki_daily_store"]
+    _all_values = ["seven_eleven", "family_mart", "lawson", "mini_stop", "seico_mart", "pay_easy",
+        "daily_yamazaki", "yamazaki_daily_store"]
     SEVEN_ELEVEN = "seven_eleven"
 
     FAMILY_MART = "family_mart"

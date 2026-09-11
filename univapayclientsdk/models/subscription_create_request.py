@@ -49,6 +49,11 @@ class SubscriptionCreateRequest(object):
             authorization only is true.  Allowed days: P1D to P6D.
         metadata (GenericMetadata): A free-form dictionary for custom metadata.
         three_ds (ChargeCreateRequestThreeDs): Charge Create Request Three Ds schema.
+            Either supply `mode` (and optionally `redirect_endpoint`) to have
+            Univapay run 3DS, or supply all six external-MPI fields
+            (`authentication_value` through `transaction_status`) when 3DS
+            authentication was already completed outside of Univapay — in that case
+            `mode` is set to `provided` automatically and must not be sent.
         additional_properties (Dict[str, Any]): The additional properties for the
             model.
 

@@ -20,16 +20,11 @@ Token Create Card Data Cvv Authorize schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_create_card_data_cvv_authorize import TokenCreateCardDataCvvAuthorize
 
 token_create_card_data_cvv_authorize = TokenCreateCardDataCvvAuthorize(
     enabled=False,
-    currency='JPY',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    currency='JPY'
 )
 ```
 

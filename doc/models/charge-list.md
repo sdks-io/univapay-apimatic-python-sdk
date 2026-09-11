@@ -48,9 +48,21 @@ charge_list = ChargeList(
             charged_amount_formatted=1000,
             only_direct_currency=False,
             status=ChargeStatus.SUCCESSFUL,
-            error=PaymentError(),
+            error=PaymentError(
+                code=24,
+                message='message4',
+                detail='detail0',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
             metadata=GenericMetadata(
-                order_id='ORD-2001'
+                order_id='ORD-2001',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
             ),
             mode=ChargeMode.TEST,
             created_on=dateutil.parser.parse('2024-06-25T07:29:12.854865Z'),
@@ -72,9 +84,21 @@ charge_list = ChargeList(
             charged_amount_formatted=12.5,
             only_direct_currency=False,
             status=ChargeStatus.SUCCESSFUL,
-            error=PaymentError(),
+            error=PaymentError(
+                code=24,
+                message='message4',
+                detail='detail0',
+                additional_properties={
+                    'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
+                }
+            ),
             metadata=GenericMetadata(
-                order_id='ORD-2002'
+                order_id='ORD-2002',
+                univapay_name='univapay-name8',
+                univapay_phone_number='univapay-phone-number2',
+                additional_properties={
+                    'exampleAdditionalProperty': 'String4'
+                }
             ),
             mode=ChargeMode.TEST,
             created_on=dateutil.parser.parse('2024-06-25T07:19:19.507637Z'),

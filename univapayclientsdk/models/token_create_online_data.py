@@ -20,7 +20,11 @@ class TokenCreateOnlineData(object):
     Token Create Online Data schema.
 
     Attributes:
-        brand (BaseOnlineDataBrand): Base Online Data Brand schema.
+        brand (BaseOnlineDataBrand): Base Online Data Brand schema. `alipay_china`,
+            `alipay_hk`, `gcash`, `dana`, `truemoney`, `kakaopay`, `tng`,
+            `rabbit_line_pay`, `bpi`, `boost`, `tinaba`, `naver_pay`, `toss_pay`,
+            `maya`, `grab_sg`, `kredivo_id`, `k_plus`, and `kaspi_kz` are Alipay+
+            regional wallets routed through the `alipay_plus_online` gateway family.
         call_method (BaseOnlineDataCallMethod): Base Online Data Call Method schema.
         os_type (BaseOnlineDataOsType): Base Online Data Os Type schema.
         user_identifier (str): Consumer specific identifier required by some gateways

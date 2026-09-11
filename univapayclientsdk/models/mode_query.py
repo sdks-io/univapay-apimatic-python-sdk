@@ -17,9 +17,23 @@ class ModeQuery(object):
 
     """
 
+    _all_values = ["live", "test"]
     LIVE = "live"
 
     TEST = "test"
+
+    @classmethod
+    def validate(cls, value):
+        """Validate value contains in enum
+
+        Args:
+            value: the value to be validated
+
+        Returns:
+            boolean : if value is valid enum values.
+
+        """
+        return value in cls._all_values
 
     @classmethod
     def from_value(cls, value, default=None):

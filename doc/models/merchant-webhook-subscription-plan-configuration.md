@@ -24,8 +24,6 @@ Subscription plan configuration.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.merchant_webhook_money_amount import MerchantWebhookMoneyAmount
 from univapayclientsdk.models.merchant_webhook_subscription_plan_configuration import MerchantWebhookSubscriptionPlanConfiguration
 
@@ -38,15 +36,9 @@ merchant_webhook_subscription_plan_configuration = MerchantWebhookSubscriptionPl
     ],
     min_charge_amount=MerchantWebhookMoneyAmount(
         amount=3000,
-        currency='JPY',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
+        currency='JPY'
     ),
-    max_payout_period='P12M',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    max_payout_period='P12M'
 )
 ```
 

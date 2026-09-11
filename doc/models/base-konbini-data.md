@@ -21,18 +21,13 @@ Base Konbini Data schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.base_konbini_data import BaseKonbiniData
 from univapayclientsdk.models.base_konbini_data_convenience_store import BaseKonbiniDataConvenienceStore
 
 base_konbini_data = BaseKonbiniData(
     customer_name='Taro Yamada',
     convenience_store=BaseKonbiniDataConvenienceStore.SEVEN_ELEVEN,
-    expiration_period='P7D',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    expiration_period='P7D'
 )
 ```
 

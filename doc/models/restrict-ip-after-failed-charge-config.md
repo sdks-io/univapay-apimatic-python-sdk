@@ -21,17 +21,12 @@ IP restriction policy applied after repeated failed charges.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.restrict_ip_after_failed_charge_config import RestrictIpAfterFailedChargeConfig
 
 restrict_ip_after_failed_charge_config = RestrictIpAfterFailedChargeConfig(
     enabled=True,
     count=5,
-    cooldown='PT1H',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    cooldown='PT1H'
 )
 ```
 

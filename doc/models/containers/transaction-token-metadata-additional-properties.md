@@ -1,19 +1,21 @@
 
 # Transaction Token Metadata Additional Properties
 
-Transaction Token Metadata Additional Properties schema.
+Alias of GenericMetadataValue, retained because this schema name is part of the published SDK surface. Do not narrow it — see GenericMetadataValue for the contract.
 
 ## Data Type
 
-`str | float | bool`
+`str | None | int | float | bool | List[str | None | int | float | bool]`
 
 ## Cases
 
 | Type |
 |  --- |
 | `str` |
+| `int` |
 | `float` |
 | `bool` |
+| [`List[Any]`](../../../doc/models/containers/generic-metadata-array-item.md) |
 
 ## str
 
@@ -25,7 +27,7 @@ Transaction Token Metadata Additional Properties schema.
 value = 'sale'
 ```
 
-## float
+## int
 
 ### Initialization Code
 
@@ -33,6 +35,16 @@ value = 'sale'
 
 ```python
 value = 10
+```
+
+## float
+
+### Initialization Code
+
+#### Example
+
+```python
+value = 10.5
 ```
 
 ## bool
@@ -43,5 +55,18 @@ value = 10
 
 ```python
 value = True
+```
+
+## List[Any]
+
+### Initialization Code
+
+#### Example
+
+```python
+value = [
+    'sale',
+    'promo'
+]
 ```
 

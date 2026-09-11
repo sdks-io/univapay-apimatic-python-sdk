@@ -20,16 +20,11 @@ Token Response Phone Number schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_response_phone_number import TokenResponsePhoneNumber
 
 token_response_phone_number = TokenResponsePhoneNumber(
     country_code=81,
-    local_number='08012341234',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    local_number='08012341234'
 )
 ```
 

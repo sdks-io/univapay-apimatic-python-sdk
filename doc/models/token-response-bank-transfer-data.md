@@ -27,8 +27,6 @@ Token Response Bank Transfer Data schema.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.token_response_bank_transfer_data import TokenResponseBankTransferData
 
 token_response_bank_transfer_data = TokenResponseBankTransferData(
@@ -40,10 +38,7 @@ token_response_bank_transfer_data = TokenResponseBankTransferData(
     branch_code='123',
     branch_name='Test Branch',
     account_number='1234567',
-    account_holder_name='TARO YAMADA',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    account_holder_name='TARO YAMADA'
 )
 ```
 

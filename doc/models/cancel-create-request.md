@@ -19,23 +19,13 @@ Request body to create a cancel for a charge. Only `metadata` is accepted; all o
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.cancel_create_request import CancelCreateRequest
 from univapayclientsdk.models.generic_metadata import GenericMetadata
 
 cancel_create_request = CancelCreateRequest(
     metadata=GenericMetadata(
-        order_id='ORD-987',
-        univapay_name='univapay-name8',
-        univapay_phone_number='univapay-phone-number2',
-        additional_properties={
-            'exampleAdditionalProperty': 'String4'
-        }
-    ),
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        order_id='ORD-987'
+    )
 )
 ```
 

@@ -772,14 +772,14 @@ elif result.is_error():
 
 # Capture Charge
 
-Captures a previously authorized charge (where `capture` was set to false during creation).  The capture amount must be less than or equal to the authorized amount, and the currency must match.
+Captures a previously authorized charge (where `capture` was set to false during creation).  The capture amount must be less than or equal to the authorized amount, and the currency must match. The request body — and both of its fields — is optional: if omitted entirely, the full outstanding authorized amount (in the originally requested currency) is captured.
 
 ```python
 def capture_charge(self,
                   store_id,
                   id,
-                  body,
-                  idempotency_key=None)
+                  idempotency_key=None,
+                  body=None)
 ```
 
 ## Authentication
@@ -792,8 +792,8 @@ This endpoint requires [JWT_TOKEN](../../doc/auth/oauth-2-bearer-token.md)
 |  --- | --- | --- | --- |
 | `store_id` | `uuid\|str` | Template, Required | The unique identifier of the store. |
 | `id` | `uuid\|str` | Template, Required | The unique identifier of the resource. |
-| `body` | [`ChargeCaptureRequest`](../../doc/models/charge-capture-request.md) | Body, Required | Request payload for capturing an authorized charge. |
 | `idempotency_key` | `str` | Header, Optional | An optional idempotency key to prevent double charges and duplicate operations. We recommend a randomly generated UUID (v4). |
+| `body` | [`ChargeCaptureRequest`](../../doc/models/charge-capture-request.md) | Body, Optional | Optional request payload for capturing an authorized charge. Omit entirely to capture the full outstanding authorized amount. |
 
 ## Response Type
 
@@ -816,7 +816,7 @@ body = ChargeCaptureRequest(
 result = charges_api.capture_charge(
     store_id,
     id,
-    body
+    body=body
 )
 
 if result.is_success():
@@ -986,7 +986,8 @@ elif result.is_error():
 
 # List Bank Transfer Ledgers
 
-Retrieves bank transfer ledger entries associated with a charge.
+Retrieves bank transfer ledger entries associated with a charge. This is an optional reconciliation endpoint — not part of the required create-charge-and-poll flow.
+**⚠️ Requires a merchant-level application token**, unlike the rest of the bank transfer flow. A store application token (`Bearer {secret}.{jwt}` scoped to a `store_id`) is not sufficient here, even though the path is store-scoped.
 
 ```python
 def list_bank_transfer_ledgers(self,

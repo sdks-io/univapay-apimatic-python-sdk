@@ -27,8 +27,6 @@ Issuer token or bank transfer instruction payload.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.issuer_token import IssuerToken
 from univapayclientsdk.models.issuer_token_call_method import IssuerTokenCallMethod
 from univapayclientsdk.models.issuer_token_payload import IssuerTokenPayload
@@ -39,19 +37,8 @@ issuer_token = IssuerToken(
     issuer_token='https://example.com/payments/issuer',
     call_method=IssuerTokenCallMethod.HTTP_POST,
     payload=IssuerTokenPayload(
-        request_data='example',
-        s_spcd='sSpcd6',
-        s_cptok='sCptok0',
-        s_terkn='sTerkn6',
-        additional_properties={
-            'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-        }
-    ),
-    account_id='account_id4',
-    branch_code='branch_code0',
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+        request_data='example'
+    )
 )
 ```
 

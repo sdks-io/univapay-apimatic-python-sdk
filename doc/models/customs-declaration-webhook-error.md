@@ -22,8 +22,6 @@ Error payload returned when customs declaration processing fails.
 ## Example
 
 ```python
-import jsonpickle
-
 from univapayclientsdk.models.customs_declaration_webhook_error import CustomsDeclarationWebhookError
 from univapayclientsdk.models.customs_declaration_webhook_other_error import CustomsDeclarationWebhookOtherError
 
@@ -34,21 +32,9 @@ customs_declaration_webhook_error = CustomsDeclarationWebhookError(
     others=[
         CustomsDeclarationWebhookOtherError(
             mtype='related_item',
-            credentials_id='000013b6-0000-0000-0000-000000000000',
-            message=[
-                'message4',
-                'message5',
-                'message6'
-            ],
-            item_name='charge',
-            additional_properties={
-                'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-            }
+            item_name='charge'
         )
-    ],
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
+    ]
 )
 ```
 

@@ -28,8 +28,8 @@ class RefundReasonResponse(object):
 
     """
 
-    _all_values = ["duplicate", "fraud", "customer_request", "system_failure",
-        "chargeback", "chargeback_fee_exempt", "chargeback_reverse"]
+    _all_values = ["duplicate", "fraud", "customer_request", "system_failure", "chargeback",
+        "chargeback_fee_exempt", "chargeback_reverse"]
     DUPLICATE = "duplicate"
 
     FRAUD = "fraud"

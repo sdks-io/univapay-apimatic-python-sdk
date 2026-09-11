@@ -19,16 +19,8 @@ Schedule-related settings.
 ## Example
 
 ```python
-import jsonpickle
-
-from univapayclientsdk.models.subscription_termination_mode import SubscriptionTerminationMode
 from univapayclientsdk.models.suspend_schedule_settings import SuspendScheduleSettings
 
-suspend_schedule_settings = SuspendScheduleSettings(
-    termination_mode=SubscriptionTerminationMode.IMMEDIATE,
-    additional_properties={
-        'exampleAdditionalProperty': jsonpickle.decode('{"key1":"val1","key2":"val2"}')
-    }
-)
+suspend_schedule_settings = SuspendScheduleSettings()
 ```
 
